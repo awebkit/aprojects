@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:background="@drawable/layout_search_bg" >
+
+    <TextView
+        android:id="@+id/tvWarningText"
+        android:layout_width="295dp"
+        android:layout_height="304dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/warning_layout_notice" />
+
+    <Button
+        android:id="@+id/warning_agreed"
+        android:layout_width="296dp"
+        android:layout_height="41dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="383dp"
+        android:text="同    意"
+        android:textSize="20dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/warning_layout_agreed" />
+
+</RelativeLayout>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, AutoNaviTBTDemoActivity!</string>
+    <string name="app_name">TBT导航</string>
+    <string name="maps_api_key">c2b0f58a6f09cafd1503c06ef08ac7aeb7ddb91a1e91726e476b6160ea06df730ddd67eed7d9c474</string>
+    <string name="cancel">取消</string>
+    <string name="ok">确定</string>
+    <string name="quit">确定退出程序？</string>
+    <string name="menu_delete">delete</string>
+    <string name="menu_delete_all">delete all</string>
+
+</resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/startNavigation" android:menuCategory="system" android:title="开始GPS导航"></item>
+    <item android:id="@+id/stopNavigation" android:title="停止GPS导航"></item><item android:id="@+id/startSimulator" android:title="开始模拟导航" android:menuCategory="system"></item>
+    <item android:id="@+id/stopSimulator" android:title="停止模拟导航"></item>
+    
+    
+
+</menu>

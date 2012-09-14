@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/layout_search_bg" >
+
+    <TextView
+        android:id="@+id/tvSearchTitle"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/top_bar"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white" />
+
+    <Button
+        android:id="@+id/btn_detail_back"
+        android:layout_width="61dp"
+        android:layout_height="29dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/layout_search_btnmode_back" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="280dp"
+        android:layout_height="171dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/layout_details_pic_bg" />
+
+    <TextView
+        android:id="@+id/tvAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="247dp"
+        android:text="地址：" 
+        android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/tvTelephone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="291dp"
+        android:text="电话：" 
+        android:textSize="18dp"/>
+    <TextView
+        android:id="@+id/tvZipCode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="20dp"
+        android:layout_marginTop="335dp"
+        android:text="邮编：" 
+        android:textSize="18dp"/>
+
+    <Button
+        android:id="@+id/btnNavi"
+        android:layout_width="93dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="395dp"
+        android:background="@drawable/layout_details_btnmode_nav" />
+    <Button
+        android:id="@+id/btnAround"
+        android:layout_width="93dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="113dp"
+        android:layout_marginTop="395dp"
+        android:background="@drawable/layout_details_btnmode_around" />
+    <Button
+        android:id="@+id/btnShare"
+        android:layout_width="93dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="214dp"
+        android:layout_marginTop="395dp"
+        android:background="@drawable/layout_details_btnmode_share" />
+
+    <TextView
+        android:id="@+id/tvAddressDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvAddress"
+        android:layout_toRightOf="@+id/tvAddress"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tvTelephoneDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/tvTelephone"
+        android:layout_toRightOf="@+id/tvTelephone"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/tvZipCodeDetail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/tvZipCode"
+        android:layout_alignTop="@+id/tvZipCode"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>
