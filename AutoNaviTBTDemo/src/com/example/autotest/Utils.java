@@ -12,38 +12,40 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Picture;
 import android.graphics.PointF;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
 import android.util.Log;
 import android.view.View;
 
 public class Utils {
-    private static Bitmap mCapture;
-    
-    public static void initBitmap(int thumbnailWidth, int thumbnailHeight){
-        mCapture = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight,
-                Bitmap.Config.RGB_565);
-    }
-    
-    public static Bitmap createScreenshot1(View view, int thumbnailWidth, int thumbnailHeight) {
-        if (view != null) {
-            view.setDrawingCacheEnabled(true);
-            view.buildDrawingCache();
-            mCapture = Bitmap.createBitmap(view.getDrawingCache());
-            view.destroyDrawingCache();
-            view.setDrawingCacheEnabled(false);
-            return mCapture;
-        }
-        return null;
-    }
-    
-    public static Bitmap createScreenshot2(View view) {
-        if (view != null) {
-            Canvas c = new Canvas(mCapture);
-            //view.set
-            view.draw(c);
-            return mCapture;
-        }
-        return null;
-    }
+//    private static Bitmap mCapture;
+//    
+//    public static void initBitmap(int thumbnailWidth, int thumbnailHeight){
+//        mCapture = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight,
+//                Bitmap.Config.RGB_565);
+//    }
+//    
+//    public static Bitmap createScreenshot1(View view, int thumbnailWidth, int thumbnailHeight) {
+//        if (view != null) {
+//            view.setDrawingCacheEnabled(true);
+//            view.buildDrawingCache();
+//            mCapture = Bitmap.createBitmap(view.getDrawingCache());
+//            view.destroyDrawingCache();
+//            view.setDrawingCacheEnabled(false);
+//            return mCapture;
+//        }
+//        return null;
+//    }
+//    
+//    public static Bitmap createScreenshot2(View view) {
+//        if (view != null) {
+//            Canvas c = new Canvas(mCapture);
+//            //view.set
+//            view.draw(c);
+//            return mCapture;
+//        }
+//        return null;
+//    }
     
     public static Bitmap createScreenshot3(View view, int thumbnailWidth, int thumbnailHeight) {
         if (view != null) {
@@ -55,9 +57,36 @@ public class Utils {
                 return null;
             }   
             Canvas c = new Canvas(mCapture);
-            final int left = view.getScrollX();
-            final int top = view.getScrollY();
-            c.translate(-left, -top);
+//            final int left = view.getScrollX();
+//            final int top = view.getScrollY();
+//            c.translate(-left, -top);
+            //c.scale(0.65f, 0.65f, left, top);
+            try {
+                // draw webview may nullpoint
+                view.draw(c);
+            } catch (Exception e) {
+            }
+            return mCapture;
+        }
+        return null;
+    }
+    
+    public static Bitmap createScreenshot4(View view, int thumbnailWidth, int thumbnailHeight) {
+        if (view != null) {
+            Bitmap mCapture;
+            try {
+                mCapture = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight,
+                        Bitmap.Config.RGB_565);
+            } catch (OutOfMemoryError e) {
+                return null;
+            }   
+            Canvas c = new Canvas(mCapture);
+            Paint transPainter = new Paint();
+            transPainter.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+            c.drawRect(0, 0, mCapture.getWidth(), mCapture.getHeight(), transPainter);
+//            final int left = view.getScrollX();
+//            final int top = view.getScrollY();
+//            c.translate(-left, -top);
             //c.scale(0.65f, 0.65f, left, top);
             try {
                 // draw webview may nullpoint

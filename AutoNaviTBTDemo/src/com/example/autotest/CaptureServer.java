@@ -20,9 +20,6 @@ public class CaptureServer implements Runnable {
     private static int CAPTURE_PORT = 54321;
     
     private static Activity mActivity;
-    private int mWidth;
-    private int mHeight;
-    private static Bitmap mCapture;
     private static boolean mInsideUI;
     
     
@@ -32,13 +29,6 @@ public class CaptureServer implements Runnable {
     
     CaptureServer(Activity activity) {
         mActivity = activity;
-        
-        mWidth = mActivity.getWindowManager().getDefaultDisplay().getWidth();
-        mHeight = mActivity.getWindowManager().getDefaultDisplay().getHeight();
-        Utils.initBitmap(mWidth, mHeight);
-        mCapture = Bitmap.createBitmap(mWidth, mHeight,
-                Bitmap.Config.RGB_565);
-
         mCaptureClerk = null;
     }
 
@@ -95,9 +85,16 @@ public class CaptureServer implements Runnable {
     private byte[] prepareCaptureMessage() {
         Log.i(LOG_TAG, "prepareCaptureMessage activity " + mActivity.hashCode());
 
+        View v = mActivity.getWindow().getDecorView();
+        if (v == null)
+            return null;
+
+        int width = mActivity.getWindowManager().getDefaultDisplay().getWidth();
+        int height = mActivity.getWindowManager().getDefaultDisplay().getHeight();
+
         if (mInsideUI) {
             ((TBTNaviDemoMapView) mActivity).createTestMessage();
-            
+
             Bitmap bmp = mCaptureClerk.getCaptureProduct();
 
             ByteArrayOutputStream os = new ByteArrayOutputStream();
@@ -107,27 +104,22 @@ public class CaptureServer implements Runnable {
 //            pos++;
 //            Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
 
-            return new MessageBody(mWidth, mHeight, byteArray.length, byteArray).getBuf();
+            return new MessageBody(width, height, byteArray.length, byteArray).getBuf();
         }
-        
-        View v = mActivity.getWindow().getDecorView();
-        if (v == null)
-            return null;
 
-        // Bitmap bmp = Utils.createScreenshot2(v);
-        Canvas c = new Canvas(mCapture);
-        v.draw(c);
+         Bitmap bmp = Utils.createScreenshot3(v, width, height);
+
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
-        mCapture.compress(Bitmap.CompressFormat.JPEG, 50, os);
+        bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
 
         // TEST
 //        pos++;
-//        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", mCapture, true);
+//        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
 
         byte[] byteArray = os.toByteArray();
         Log.i(LOG_TAG, "prepareCaptureMessage end 222");
-        return new MessageBody(mWidth, mHeight, byteArray.length, byteArray).getBuf();
+        return new MessageBody(width, height, byteArray.length, byteArray).getBuf();
     }
 
 }

@@ -21,6 +21,7 @@ public class ScreenSocket implements Runnable {
     private static String LOG_TAG = "tbt";
     
     private static int SOCKET_PORT = 54123;
+    private static int KEYMAX = 246;
 //    private static final HashMap S_MYKEYMAP = new HashMap();
     
     ScreenSocket() {
@@ -47,7 +48,7 @@ public class ScreenSocket implements Runnable {
                 try  
                 {    
                     DataInputStream in = new DataInputStream(client.getInputStream());
-                    while(true){
+                    while(true && in.available() > 0){
                         if (client == null)
                             break;
 
@@ -81,7 +82,7 @@ public class ScreenSocket implements Runnable {
                         String msg = "read msg [" + type1 + " " + code1 + " " + value1 + "]";
                         Log.i(LOG_TAG, msg);
                         
-                        if (type1 == 1) {
+                        if (type1 == 1 && code1 > 0 && code1 < KEYMAX) {
                             Log.i(LOG_TAG, "=====begin keyevent");
                             Instrumentation inst = new Instrumentation();
                             if (value1 == 1) {

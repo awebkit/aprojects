@@ -1118,9 +1118,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 			   
             }
             else if(msg.what == TBT_AUTOTEST_MSG){
-                Log.i(LOG_TAG, "******** begin capture  ----------->");
+                Log.i(LOG_TAG, "******** begin capture0  ----------->");
                 View v = getWindow().getDecorView(); 
-                mCapture = Utils.createScreenshot2(v);
+                mCapture = Utils.createScreenshot3(v, v.getWidth(), v.getHeight());
                 for (int i = 0; i < DialogArray.size(); ++i){
                     Dialog d = DialogArray.valueAt(i);
                     if (d != null && d.isShowing()){
@@ -1133,8 +1133,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
                         View dialogView = w.getDecorView();
                         Log.i(LOG_TAG, "======[x y width height alpha gravity]: [" + x + " " + y + " " + 
                                 dialogView.getWidth() + " " + dialogView.getHeight() + " " + lp.alpha + " " + lp.gravity 
-                                + " " + lp.width + " " + lp.height);
-//                        Bitmap second = Utils.createScreenshot3(dialogView, dialogView.getWidth(), dialogView.getHeight());
+                                + " " + lp.width + " " + lp.height  + " "+ dialogView.getScrollX() + " " +dialogView.getScrollY());
+//                        Bitmap second = Utils.createScreenshot4(dialogView, dialogView.getWidth(), dialogView.getHeight());
 //                        mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint);
                         break; //only one dialog
                     }
