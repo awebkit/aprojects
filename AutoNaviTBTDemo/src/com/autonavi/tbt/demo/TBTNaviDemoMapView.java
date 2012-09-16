@@ -26,6 +26,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
+import android.graphics.PointF;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -40,6 +41,7 @@ import android.os.Message;
 import android.telephony.TelephonyManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
 import android.view.KeyEvent;
@@ -50,6 +52,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageButton;
@@ -175,6 +178,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	TBTNaviDemoRouteData mRouteData;
 	private String LOG_TAG = "TBT";
 	
+	private SparseArray<Dialog> DialogArray;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -233,6 +237,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
+					DialogArray.append(d.hashCode(), d);
 				}
 			}
 		});
@@ -244,6 +249,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				if (mCrossExists) {
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
+					DialogArray.append(d.hashCode(), d);
 				}
 			}
 		});
@@ -404,6 +410,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
         BackgroundHandler.setActivity(this, true);
 		mCaptureClerk = new CaptureClerk();
 		CaptureServer.setClerk(mCaptureClerk);
+		
+		DialogArray = new SparseArray();
 	}
 	private TTSHandler mTTSHandler= null;
 	
@@ -536,6 +544,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					}
 				}).create();
 				mAlertDialog.show();
+				DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
 			}
 			
 			naviOverlay = new NaviLineOverlay();
@@ -558,6 +567,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		if (routeResult != 1) {
 			mAlertDialog = new AlertDialog.Builder(this).setTitle(str).setPositiveButton(R.string.ok, null).create();
 			mAlertDialog.show();
+			DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
 		}
 	}
 	
@@ -881,6 +891,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				    Log.i(LOG_TAG, "mTrafficPanelExists ===========");
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
+					DialogArray.append(d.hashCode(), d);
 				}
 			}
 			
@@ -905,6 +916,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				    Log.i(LOG_TAG, "mCrossExists ===========");
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
+					DialogArray.append(d.hashCode(), d);
 				}
 			}
 		}
@@ -1047,6 +1059,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		})*/.create();
 
 		alertDialog.show();
+		DialogArray.append(alertDialog.hashCode(), alertDialog);
 	}
     
 	public void setCCP(double longitude, double latitude) {		
@@ -1108,6 +1121,26 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
                 Log.i(LOG_TAG, "******** begin capture  ----------->");
                 View v = getWindow().getDecorView(); 
                 mCapture = Utils.createScreenshot2(v);
+                for (int i = 0; i < DialogArray.size(); ++i){
+                    Dialog d = DialogArray.valueAt(i);
+                    if (d != null && d.isShowing()){
+                        Log.i(LOG_TAG, "======= dialog " + d.hashCode());
+                        Window w = d.getWindow();
+                        WindowManager.LayoutParams lp = w.getAttributes();
+                        float x = lp.x;
+                        float y = lp.y;
+                        PointF fromPoint = new PointF(x, y);
+                        View dialogView = w.getDecorView();
+                        Log.i(LOG_TAG, "======[x y width height alpha gravity]: [" + x + " " + y + " " + 
+                                dialogView.getWidth() + " " + dialogView.getHeight() + " " + lp.alpha + " " + lp.gravity 
+                                + " " + lp.width + " " + lp.height);
+//                        Bitmap second = Utils.createScreenshot3(dialogView, dialogView.getWidth(), dialogView.getHeight());
+//                        mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint);
+                        break; //only one dialog
+                    }
+
+                }
+
                 mCaptureClerk.setCaptureProduct(mCapture);
                 
                 Log.i(LOG_TAG, "******** end  capture  ----------->");
@@ -1221,6 +1254,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
             	mpDialog.setMessage("路径请求中...");
             	mpDialog.setCancelable(true);
             	mpDialog.show();
+            	DialogArray.append(mpDialog.hashCode(), mpDialog);
             }
             else if (msg.what == SHOW_ROUTE_FOR_TMC_HINT) {
             	Toast.makeText(getApplicationContext(), "前方路况变化，重新计算路线中。。。",

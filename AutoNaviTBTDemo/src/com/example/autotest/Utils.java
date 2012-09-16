@@ -8,7 +8,10 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Picture;
+import android.graphics.PointF;
 import android.util.Log;
 import android.view.View;
 
@@ -33,8 +36,9 @@ public class Utils {
     }
     
     public static Bitmap createScreenshot2(View view) {
-        if (view != null) {  
+        if (view != null) {
             Canvas c = new Canvas(mCapture);
+            //view.set
             view.draw(c);
             return mCapture;
         }
@@ -107,4 +111,51 @@ public class Utils {
         b[3] = (byte) (n >> 24 & 0xff);
         return b;
       }
+    
+    public static int ByteArraytoInt(byte[] b) {
+        int iOutcome = 0;
+        byte bLoop;
+        for (int i = 0; i < 4; i++) {
+                bLoop = b[i];
+                iOutcome += (bLoop & 0xff) << (8 * i);
+        }
+        return iOutcome;
+     }
+
+    public static short ByteArraytoShort(byte[] b) {
+        short iOutcome = 0;
+        byte bLoop;
+        for (int i = 0; i < 2; i++) {
+            bLoop = b[i];
+            iOutcome += (bLoop & 0xff) << (8 * i);
+        }
+        return iOutcome;
+    }
+    
+    /** 
+     * Mix two Bitmap as one. 
+     *  
+     * @param bitmapOne 
+     * @param bitmapTwo 
+     * @param point 
+     *            where the second bitmap is painted. 
+     * @return 
+     */  
+    public static Bitmap mixtureBitmap(Bitmap first, Bitmap second, PointF fromPoint) {  
+        if (first == null || second == null || fromPoint == null) {  
+            return null;  
+        }  
+        Bitmap newBitmap = Bitmap.createBitmap(first.getWidth(), first.getHeight(), Bitmap.Config.RGB_565);  
+        Canvas cv = new Canvas(newBitmap); 
+        Paint paint = new Paint();
+        int alpha = (int) (255 * 0.3);
+        paint.setAlpha(alpha);
+        cv.drawBitmap(first, 0, 0, paint);
+        Paint paint2 = new Paint();
+        paint2.setColor(Color.TRANSPARENT);
+        cv.drawBitmap(second, fromPoint.x, fromPoint.y, paint2);  
+        cv.save(Canvas.ALL_SAVE_FLAG);  
+        cv.restore();  
+        return newBitmap;  
+    }
 }
