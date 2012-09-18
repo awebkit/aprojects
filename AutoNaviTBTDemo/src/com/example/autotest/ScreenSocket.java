@@ -64,6 +64,11 @@ public class ScreenSocket implements Runnable {
                                 continue;
                             }
                             Log.i(LOG_TAG, "======== read msg =======" + line);
+                            //test
+                            //EV_KEY KeyEvent.KEYCODE_BACK 1
+                            doCmd((short)1, (short)KeyEvent.KEYCODE_BACK, 1);
+                            //EV_KEY KeyEvent.KEYCODE_BACK 0
+//                            doCmd((short)1, (short)KeyEvent.KEYCODE_BACK, 0);
                         }
                         if (true) {
                             //Important
@@ -72,27 +77,41 @@ public class ScreenSocket implements Runnable {
                                 break;
                             }
                             
-                            byte[] buffer = new byte[32];
-                            // msg_id(4) + msg_len(4) + time(8) + devid(4)
-                            int ret = streamIn.read(buffer, 0, 20);
-                            if (ret == -1){
+                            if (false){
+                            byte[] mybuffer = new byte[32];
+                            int myret = streamIn.read(mybuffer, 0, 28);
+                            if (myret == -1){
                                 SystemClock.sleep(1000);
                                 continue;
                             }
+                            for (int i = 0; i < 28; ++i){
+                                Log.i(LOG_TAG, "== read [" + mybuffer[i] + "]");                                
+                            }
+                            }
+                            if (true){
+                            // msg_id(4) + msg_len(4) + time(8) + devid(4)
+                            byte[] buffer = new byte[32];
+                            
+                            streamIn.readFully(buffer, 0, 28);
+//                            if (ret == -1){
+//                                SystemClock.sleep(1000);
+//                                continue;
+//                            }
+//                            Log.i(LOG_TAG, "== read " + ret + " bytes");
                             // type
                             byte[] shortbuffer = new byte[2];
                             byte[] intbuffer = new byte[4];
-                            streamIn.read(buffer, 20, 2);
+//                            streamIn.read(buffer, 20, 2);
                             shortbuffer[0] = buffer[20];
                             shortbuffer[1] = buffer[21];
                             short type1 = Utils.ByteArraytoShort(shortbuffer);
                             // code
-                            streamIn.read(buffer, 22, 2);
+//                            streamIn.read(buffer, 22, 2);
                             shortbuffer[0] = buffer[22];
                             shortbuffer[1] = buffer[23];
                             short code1 = Utils.ByteArraytoShort(shortbuffer);
                             // value
-                            streamIn.read(buffer, 24, 4);
+//                            streamIn.read(buffer, 24, 4);
                             intbuffer[0] = buffer[24];
                             intbuffer[1] = buffer[25];
                             intbuffer[2] = buffer[26];
@@ -102,6 +121,7 @@ public class ScreenSocket implements Runnable {
                             Log.i(LOG_TAG, msg);
                             
                             doCmd(type1, code1, value1);
+                            }
                         }
                     } catch (IOException e) {
                         Log.i(LOG_TAG, "socket thread exception, close");
@@ -120,6 +140,21 @@ public class ScreenSocket implements Runnable {
     private void doCmd(short type, short code, int value) {
         Log.i(LOG_TAG, "=====do command [" + type + " " + code + " " + value + "]");
         
+        if (false){
+            if (type == 1) {
+                Instrumentation inst = new Instrumentation();
+                if (value == 1) {
+                    KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, code);
+                    inst.sendKeySync(event);
+                } else if (value == 0) {
+                    KeyEvent event = new KeyEvent(KeyEvent.ACTION_UP, code);
+                    inst.sendKeySync(event);
+                } else {
+                    inst.sendKeyDownUpSync(code);
+                }
+            }
+        }
+        if (true){
         if (type == 1 && code > 0 && code < KEYMAX) { //EV_KEY
             Log.i(LOG_TAG, "=====begin keyevent11");
             AndroidEvent event = new AndroidEvent(type, code, value);
@@ -133,6 +168,7 @@ public class ScreenSocket implements Runnable {
             mEventList.add(event);
         } else {
             Log.i(LOG_TAG, "bad command");
+        }
         }
     }
 
