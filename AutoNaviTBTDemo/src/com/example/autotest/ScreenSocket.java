@@ -22,6 +22,9 @@ public class ScreenSocket implements Runnable {
     
     private static int SOCKET_PORT = 54123;
     private static int KEYMAX = 246;
+    private static int testi = 0;
+    private static int emuX;
+    private static int emuY;
 //    private static final HashMap S_MYKEYMAP = new HashMap();
     
     private Socket          client   = null;
@@ -65,10 +68,18 @@ public class ScreenSocket implements Runnable {
                             }
                             Log.i(LOG_TAG, "======== read msg =======" + line);
                             //test
-                            //EV_KEY KeyEvent.KEYCODE_BACK 1
-                            doCmd((short)1, (short)KeyEvent.KEYCODE_BACK, 1);
-                            //EV_KEY KeyEvent.KEYCODE_BACK 0
-//                            doCmd((short)1, (short)KeyEvent.KEYCODE_BACK, 0);
+                            testi++;
+                            if (testi == 1) {
+                                // EV_KEY KeyEvent.KEYCODE_BACK 1
+                                doCmd((short) 1, (short) KeyEvent.KEYCODE_BACK, 1);
+                            }
+                            if (testi == 2) {
+                                // EV_KEY KeyEvent.KEYCODE_BACK 0
+                                doCmd((short) 1, (short) KeyEvent.KEYCODE_BACK, 0);
+                            }
+                            if (testi == 3) {
+                                doCmd((short) 3, (short) KeyEvent.KEYCODE_BACK, 0);
+                            }
                         }
                         if (true) {
                             //Important
@@ -154,21 +165,66 @@ public class ScreenSocket implements Runnable {
                 }
             }
         }
-        if (true){
-        if (type == 1 && code > 0 && code < KEYMAX) { //EV_KEY
-            Log.i(LOG_TAG, "=====begin keyevent11");
-            AndroidEvent event = new AndroidEvent(type, code, value);
-            mEventList.add(event);
-            Log.i(LOG_TAG, "=====end keyevent");
-        } else if (type == 0) { //EV_SYN
-            processAndroidEvent();
-        } else if (type == 3) { //EV_REL
-            // TODO
-            AndroidEvent event = new AndroidEvent(type, code, value);
-            mEventList.add(event);
-        } else {
-            Log.i(LOG_TAG, "bad command");
-        }
+        if (true) {
+            if (type == 1) { // EV_KEY
+                Log.i(LOG_TAG, "=====begin keyevent ====");
+                Instrumentation inst = new Instrumentation();
+                if (code == 330) {
+                    Log.i(LOG_TAG, "===== simulate touch event begin ====");
+                    if (value == 1) {
+                        MotionEvent downEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_DOWN, emuX, emuY, 0);
+                        inst.sendPointerSync(downEvent);
+                    } else if (value == 0) {
+                        MotionEvent upEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                                SystemClock.uptimeMillis(),
+                                MotionEvent.ACTION_UP, emuX, emuY, 0);
+
+                        inst.sendPointerSync(upEvent);
+                    }
+                    Log.i(LOG_TAG, "===== simulate touch event end ====");
+                    return;
+                }
+
+                if (code > 0 && code < KEYMAX){
+                    Log.i(LOG_TAG, "===== key code is not right =====");
+                    return;
+                }
+                if (value == 1) {
+                    KeyEvent event = new KeyEvent(KeyEvent.ACTION_DOWN, code);
+                    inst.sendKeySync(event);
+                } else if (value == 0) {
+                    KeyEvent event = new KeyEvent(KeyEvent.ACTION_UP, code);
+                    inst.sendKeySync(event);
+                } else {
+                    inst.sendKeyDownUpSync(code);
+                }
+                Log.i(LOG_TAG, "=====end keyevent");
+            } else if (type == 0) { // EV_SYN
+                Log.i(LOG_TAG, "===== ev_syn do nothing");
+                // processAndroidEvent();
+            } else if (type == 3) { // EV_REL
+                // TODO
+                // AndroidEvent event = new AndroidEvent(type, code, value);
+                // mEventList.add(event);
+                if (code == 0) {
+                    emuX = value;
+                } else if (code == 1) {
+                    emuY = value;
+                } else if (code == 24) {
+                    Log.i(LOG_TAG, "===== simulate move event begin ====");
+                    Instrumentation inst = new Instrumentation();
+                    MotionEvent upEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
+                            SystemClock.uptimeMillis(),
+                            MotionEvent.ACTION_MOVE, emuX, emuY, 0);
+
+                    inst.sendPointerSync(upEvent);
+                    Log.i(LOG_TAG, "===== simulate move event end ====");
+                }
+            } else {
+                Log.i(LOG_TAG, "bad command");
+            }
         }
     }
 
