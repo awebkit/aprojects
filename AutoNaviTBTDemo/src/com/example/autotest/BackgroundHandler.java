@@ -26,7 +26,7 @@ public class BackgroundHandler {
         mCaptureServer = new CaptureServer(activity);
         execute(mCaptureServer);
         //
-        execute(new ScreenSocket());
+        execute(new ScreenSocket(activity));
     }
     
     public static void setActivity(Activity activity){
