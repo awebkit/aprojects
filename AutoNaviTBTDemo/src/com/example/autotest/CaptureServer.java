@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.app.Instrumentation;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 import android.os.SystemClock;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -83,7 +84,7 @@ public class CaptureServer implements Runnable {
                                 streamOut.write(buffer);
                                 streamOut.flush();
                             }
-                            SystemClock.sleep(200);
+                            SystemClock.sleep(2000);
                         }
                     } catch (IOException e) {
                         Log.i(LOG_TAG, "capture thread exception, close");
@@ -165,9 +166,13 @@ public class CaptureServer implements Runnable {
         if (v == null)
             return null;
 
-        int width = mActivity.getWindowManager().getDefaultDisplay().getWidth();
-        int height = mActivity.getWindowManager().getDefaultDisplay().getHeight();
-
+        int width = v.getWidth();
+        int height = v.getHeight();
+        Rect outRect = new Rect();
+        v.getWindowVisibleDisplayFrame(outRect);
+        
+        height = height - outRect.top;
+        Log.i(LOG_TAG, "prepareCaptureMessage activity height:" + height);
         if (mInsideUI) {
             ((TBTNaviDemoMapView) mActivity).createTestMessage();
 
@@ -177,8 +182,8 @@ public class CaptureServer implements Runnable {
             bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
             byte[] byteArray = os.toByteArray();
 
-//            pos++;
-//            Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
+            pos++;
+            Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
 
             return new MessageBody(width, height, byteArray.length, byteArray).getBuf();
         }
@@ -190,8 +195,8 @@ public class CaptureServer implements Runnable {
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
 
         // TEST
-//        pos++;
-//        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
+        pos++;
+        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
 
         byte[] byteArray = os.toByteArray();
         Log.i(LOG_TAG, "prepareCaptureMessage end 222");

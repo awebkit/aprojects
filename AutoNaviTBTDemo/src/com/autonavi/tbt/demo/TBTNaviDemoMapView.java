@@ -27,6 +27,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.Point;
 import android.graphics.PointF;
+import android.graphics.Rect;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -44,6 +45,7 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.GestureDetector;
 import android.view.GestureDetector.OnGestureListener;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -164,7 +166,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	private ImageButton ibBackToCar;
 	private boolean mNorthUp = false;
 	private boolean mMapCenter = true;
-
+	private static int pos = 10;
 	//位置管理
 	private LocationManager mLocatinManager;
 	private MapPointOverlay overlay;
@@ -1119,23 +1121,43 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
             }
             else if(msg.what == TBT_AUTOTEST_MSG){
                 Log.i(LOG_TAG, "******** begin capture0  ----------->");
-                View v = getWindow().getDecorView(); 
-                mCapture = Utils.createScreenshot3(v, v.getWidth(), v.getHeight());
+                View v = getWindow().getDecorView();
+                Rect vRect = new Rect();
+                v.getWindowVisibleDisplayFrame(vRect);
+                mCapture = Utils.createPngScreenshot(v, v.getWidth(), v.getHeight() - vRect.top);
                 for (int i = 0; i < DialogArray.size(); ++i){
                     Dialog d = DialogArray.valueAt(i);
                     if (d != null && d.isShowing()){
                         Log.i(LOG_TAG, "======= dialog " + d.hashCode());
                         Window w = d.getWindow();
-                        WindowManager.LayoutParams lp = w.getAttributes();
-                        float x = lp.x;
-                        float y = lp.y;
-                        PointF fromPoint = new PointF(x, y);
+                        
                         View dialogView = w.getDecorView();
-                        Log.i(LOG_TAG, "======[x y width height alpha gravity]: [" + x + " " + y + " " + 
-                                dialogView.getWidth() + " " + dialogView.getHeight() + " " + lp.alpha + " " + lp.gravity 
-                                + " " + lp.width + " " + lp.height  + " "+ dialogView.getScrollX() + " " +dialogView.getScrollY());
-//                        Bitmap second = Utils.createScreenshot4(dialogView, dialogView.getWidth(), dialogView.getHeight());
-//                        mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint);
+                        Rect outRect = new Rect();
+                        dialogView.getWindowVisibleDisplayFrame(outRect);
+                        
+                        WindowManager.LayoutParams lp = w.getAttributes();
+                        PointF fromPoint = null;
+                        int g = lp.gravity;
+                        if (g == 48) {//
+                            float x = lp.x;
+                            float y = outRect.top / 2 + lp.y;
+                            fromPoint = new PointF(x, y);                            
+                        } else if (g == 17){
+                            DisplayMetrics outMetrics = new DisplayMetrics();
+                            getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+                            float x = (outMetrics.widthPixels - dialogView.getWidth())/ 2 + lp.x;
+                            float y = (outMetrics.heightPixels - dialogView.getHeight() )/ 2 + outRect.top / 2 + lp.y;
+                            fromPoint = new PointF(x, y);
+                        }
+                        
+                        int width = dialogView.getWidth();
+                        int height = dialogView.getHeight();
+                       
+                        height = height - outRect.top;
+                        if (width > 0 && height > 0){
+                            Bitmap second = Utils.createPngScreenshot(dialogView, width, height);
+                            mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint, lp.dimAmount);
+                        }
                         break; //only one dialog
                     }
 

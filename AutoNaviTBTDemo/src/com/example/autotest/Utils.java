@@ -97,7 +97,32 @@ public class Utils {
         }
         return null;
     }
-
+    
+    public static Bitmap createPngScreenshot(View view, int thumbnailWidth, int thumbnailHeight) {
+        if (view != null) {
+            Bitmap mCapture;
+            try {
+                mCapture = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight,
+                        Bitmap.Config.ARGB_8888);
+            } catch (OutOfMemoryError e) {
+                return null;
+            }   
+            Canvas c = new Canvas(mCapture);
+//            final int left = view.getScrollX();
+//            final int top = view.getScrollY();
+//            c.translate(-left, -top);
+            //c.scale(0.65f, 0.65f, left, top);
+            try {
+                // draw webview may nullpoint
+                view.draw(c);
+            } catch (Exception e) {
+            }
+            return mCapture;
+        }
+        return null;
+    }
+    
+    
     public static boolean saveScreenshot(Activity activity, String fileName, 
             Bitmap screenshot, boolean sdcard) {
         try {
@@ -110,6 +135,27 @@ public class Utils {
                 fos = new FileOutputStream(f);
             }    
             screenshot.compress(Bitmap.CompressFormat.JPEG, 70, fos);
+            fos.flush();
+            fos.close();
+            return true;
+        } catch (IOException e) { 
+            e.printStackTrace();
+        }    
+        return false;
+    }
+    
+    public static boolean savePngScreenshot(Activity activity, String fileName, 
+            Bitmap screenshot, boolean sdcard) {
+        try {
+            FileOutputStream fos = null;
+            if (!sdcard) {
+                fos = activity.openFileOutput(fileName, Context.MODE_WORLD_READABLE);
+            } else {
+                File f = new File(fileName);
+                f.createNewFile();     
+                fos = new FileOutputStream(f);
+            }    
+            screenshot.compress(Bitmap.CompressFormat.PNG, 70, fos);
             fos.flush();
             fos.close();
             return true;
@@ -170,19 +216,21 @@ public class Utils {
      *            where the second bitmap is painted. 
      * @return 
      */  
-    public static Bitmap mixtureBitmap(Bitmap first, Bitmap second, PointF fromPoint) {  
+    public static Bitmap mixtureBitmap(Bitmap first, Bitmap second, PointF fromPoint, float dimAmount) {  
         if (first == null || second == null || fromPoint == null) {  
             return null;  
         }  
         Bitmap newBitmap = Bitmap.createBitmap(first.getWidth(), first.getHeight(), Bitmap.Config.RGB_565);  
         Canvas cv = new Canvas(newBitmap); 
         Paint paint = new Paint();
-        int alpha = (int) (255 * 0.3);
+        int alpha = (int) (255 * dimAmount);
         paint.setAlpha(alpha);
         cv.drawBitmap(first, 0, 0, paint);
+        
         Paint paint2 = new Paint();
         paint2.setColor(Color.TRANSPARENT);
-        cv.drawBitmap(second, fromPoint.x, fromPoint.y, paint2);  
+        
+        cv.drawBitmap(second, fromPoint.x, fromPoint.y, null);  
         cv.save(Canvas.ALL_SAVE_FLAG);  
         cv.restore();  
         return newBitmap;  
