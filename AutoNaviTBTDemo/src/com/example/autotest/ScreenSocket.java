@@ -22,6 +22,8 @@ import android.view.View;
 import android.view.Window;
 
 public class ScreenSocket implements Runnable {
+    
+    private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;    
     private static String LOG_TAG = "tbt";
     
     private static int SOCKET_PORT = 54123;
@@ -56,22 +58,22 @@ public class ScreenSocket implements Runnable {
             x = Integer.parseInt(field.get(obj).toString());
             mStatusBarHeight = activity.getResources().getDimensionPixelSize(x);
         } catch (Exception e1) {
-            Log.i(LOG_TAG, "get status bar height fail");
+            if (LOGD_ENABLED) Log.d(LOG_TAG, "get status bar height fail");
             e1.printStackTrace();
         }
-        Log.i(LOG_TAG, "======******* " + mStatusBarHeight);
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "======******* " + mStatusBarHeight);
     }
     
     @Override
     public void run() {
-        Log.i(LOG_TAG, "Creating socket thread ...");
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "Creating socket thread ...");
 
         while (true) {
             try {
                 serverSocket = new ServerSocket(SOCKET_PORT);
                 
                 client = serverSocket.accept();
-                Log.i(LOG_TAG, "accept socket");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "accept socket");
                 open();
 
                 boolean done = false; // True when receive exit.
@@ -79,16 +81,16 @@ public class ScreenSocket implements Runnable {
                     try {
                         if (false) { // TEST
                             if (socketClosed()) {
-                                Log.i(LOG_TAG, "======== client socket closed =======");
+                                if (LOGD_ENABLED) Log.d(LOG_TAG, "======== client socket closed =======");
                                 break;
                             }
                             String line = streamIn.readLine();
                             if (line == null) {
-                                Log.i(LOG_TAG, "========no data, sleep 1s =======");
+                                if (LOGD_ENABLED) Log.d(LOG_TAG, "========no data, sleep 1s =======");
                                 SystemClock.sleep(1000);
                                 continue;
                             }
-                            Log.i(LOG_TAG, "======== read msg  =======" + line);
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, "======== read msg  =======" + line);
                             //test
                             testi++;
                             if (testi == 1) {
@@ -140,7 +142,7 @@ public class ScreenSocket implements Runnable {
                         if (true) {
                             //Important
                             if (socketClosed()) {
-                                Log.i(LOG_TAG, "======== client socket closed =======");
+                                if (LOGD_ENABLED) Log.d(LOG_TAG, "======== client socket closed =======");
                                 break;
                             }
                             
@@ -152,7 +154,7 @@ public class ScreenSocket implements Runnable {
                                 continue;
                             }
                             for (int i = 0; i < 28; ++i){
-                                Log.i(LOG_TAG, "== read [" + mybuffer[i] + "]");                                
+                                if (LOGD_ENABLED) Log.d(LOG_TAG, "== read [" + mybuffer[i] + "]");                                
                             }
                             }
                             if (true){
@@ -160,7 +162,7 @@ public class ScreenSocket implements Runnable {
                             byte[] buffer = new byte[32];
                             
                             streamIn.readFully(buffer, 0, 28);
-//                            Log.i(LOG_TAG, "== read " + ret + " bytes");
+//                            if (LOGD_ENABLED) Log.d(LOG_TAG, "== read " + ret + " bytes");
                             // type
                             byte[] shortbuffer = new byte[2];
                             byte[] intbuffer = new byte[4];
@@ -181,27 +183,27 @@ public class ScreenSocket implements Runnable {
                             intbuffer[3] = buffer[27];
                             int value1 = Utils.ByteArraytoInt(intbuffer);
                             String msg = "read msg [" + type1 + " " + code1 + " " + value1 + "]";
-                            Log.i(LOG_TAG, msg);
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, msg);
                             
                             doCmd(type1, code1, value1);
                             }
                         }
                     } catch (IOException e) {
-                        Log.i(LOG_TAG, "socket thread exception, close");
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "socket thread exception, close");
                         done = true;
                     }
                 }
 
                 close();
             } catch (IOException e) {
-                Log.i(LOG_TAG, "socket thread exception, exit");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "socket thread exception, exit");
                 e.printStackTrace();
             }
         }
     }
 
     private void doCmd(short type, short code, int value) {
-        Log.i(LOG_TAG, "=====do command [" + type + " " + code + " " + value + "]");
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "=====do command [" + type + " " + code + " " + value + "]");
         
         if (false){
             Instrumentation inst = new Instrumentation();
@@ -225,16 +227,16 @@ public class ScreenSocket implements Runnable {
         }
         if (true) {
             if (type == 1) { // EV_KEY
-                Log.i(LOG_TAG, "=====begin keyevent ====");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "=====begin keyevent ====");
                 
                 if (code == 330) {
                     touched = true;
-                    Log.i(LOG_TAG, "===== btn_touched ====");
+                    if (LOGD_ENABLED) Log.d(LOG_TAG, "===== btn_touched ====");
                     return;
                 }
 
                 if (code > 0 && code < KEYMAX){
-                    Log.i(LOG_TAG, "===== key code is not right =====");
+                    if (LOGD_ENABLED) Log.d(LOG_TAG, "===== key code is not right =====");
                     return;
                 }
                 
@@ -248,9 +250,9 @@ public class ScreenSocket implements Runnable {
                 } else {
                     inst.sendKeyDownUpSync(code);
                 }
-                Log.i(LOG_TAG, "=====end keyevent");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "=====end keyevent");
             } else if (type == 0) { // EV_SYN
-                Log.i(LOG_TAG, "===== ev_syn do nothing");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "===== ev_syn do nothing");
                 // processAndroidEvent();
             } else if (type == 3) { // EV_ABS
                 if (code == 0) {
@@ -270,23 +272,23 @@ public class ScreenSocket implements Runnable {
                         touched = false;
                         
                         if (!isXYValidate()){
-                            Log.i(LOG_TAG, "=====The x y :"  + emuX + " " + emuY + " is not validate.");
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, "=====The x y :"  + emuX + " " + emuY + " is not validate.");
                             return;
                         }
                         Instrumentation inst = new Instrumentation();
                         if (value == 1) {
                             pressured = true;
-                            Log.i(LOG_TAG, "==== down " + emuX + " " + emuY);
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, "==== down " + emuX + " " + emuY);
                             MotionEvent downEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
                                     SystemClock.uptimeMillis(),
                                     MotionEvent.ACTION_DOWN, emuX, emuY, 0);
                             inst.sendPointerSync(downEvent);
                         } else if (value == 0) {
                             pressured = false;
-                            Log.i(LOG_TAG, "==== move " + emuX + " " + emuY);
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, "==== move " + emuX + " " + emuY);
 
                             
-                            Log.i(LOG_TAG, "==== up " + emuX + " " + emuY);
+                            if (LOGD_ENABLED) Log.d(LOG_TAG, "==== up " + emuX + " " + emuY);
                             MotionEvent upEvent = MotionEvent.obtain(SystemClock.uptimeMillis(),
                                     SystemClock.uptimeMillis(),
                                     MotionEvent.ACTION_UP, emuX, emuY, 0);
@@ -296,10 +298,10 @@ public class ScreenSocket implements Runnable {
                         return;
                     }
                     
-                    Log.i(LOG_TAG, "===== simulate move event begin ====");
+                    if (LOGD_ENABLED) Log.d(LOG_TAG, "===== simulate move event begin ====");
                     
                     if (!isXYValidate()){
-                        Log.i(LOG_TAG, "=====The x y :"  + emuX + " " + emuY + " is not validate.");
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "=====The x y :"  + emuX + " " + emuY + " is not validate.");
                         return;
                     }
                     
@@ -309,10 +311,10 @@ public class ScreenSocket implements Runnable {
                             MotionEvent.ACTION_MOVE, emuX, emuY, 0);
 
                     inst.sendPointerSync(upEvent);
-                    Log.i(LOG_TAG, "===== simulate move event end ====");
+                    if (LOGD_ENABLED) Log.d(LOG_TAG, "===== simulate move event end ====");
                 }
             } else {
-                Log.i(LOG_TAG, "bad command");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "bad command");
             }
         }
     }
@@ -335,7 +337,7 @@ public class ScreenSocket implements Runnable {
     }
 
     private void close() throws IOException {
-        Log.i(LOG_TAG, "No data, close socket");
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "No data, close socket");
         if (client != null)
             client.close();
         if (streamIn != null)

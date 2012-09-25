@@ -24,6 +24,8 @@ import android.view.View;
 
 public class CaptureServer implements Runnable {
 
+    private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;
+    
     private static final String LOG_TAG = "tbt";
     private static int CAPTURE_PORT = 54321;
     
@@ -55,19 +57,19 @@ public class CaptureServer implements Runnable {
     public void setActivity(Activity activity, boolean useActivityMethod){
         mActivity = activity;
         mInsideUI = useActivityMethod;
-        Log.i(LOG_TAG, "set activity " + mActivity.hashCode());
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "set activity " + mActivity.hashCode());
     }
 
     @Override
     public void run() {
-        Log.i(LOG_TAG, "Creating capture thread ...");
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "Creating capture thread ...");
 
         while (true) {
             try {
                 serverSocket = new ServerSocket(CAPTURE_PORT);
 
                 client = serverSocket.accept();
-                Log.i(LOG_TAG, "capture server accept socket");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "capture server accept socket");
                 open();
 
                 boolean done = false; // No meaning for done.
@@ -75,7 +77,7 @@ public class CaptureServer implements Runnable {
                     try {
                         if (true) {
                             if (socketClosed()) {
-                                Log.i(LOG_TAG, "======== capture client socket closed =======");
+                                if (LOGD_ENABLED) Log.d(LOG_TAG, "======== capture client socket closed =======");
                                 break;
                             }                          
 
@@ -84,16 +86,16 @@ public class CaptureServer implements Runnable {
                                 streamOut.write(buffer);
                                 streamOut.flush();
                             }
-                            SystemClock.sleep(2000);
+                            SystemClock.sleep(100);
                         }
                     } catch (IOException e) {
-                        Log.i(LOG_TAG, "capture thread exception, close");
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "capture thread exception, close");
                         done = true;
                     }
                 }
                 close();
             } catch (IOException e) {
-                Log.i(LOG_TAG, "capture thread exception, exit");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "capture thread exception, exit");
                 e.printStackTrace();
             }
         }
@@ -101,7 +103,7 @@ public class CaptureServer implements Runnable {
 
     private boolean socketClosed() {
         try {
-            client.sendUrgentData(0);//发送1个字节的紧急数据，默认情况下，服务器端没有开启紧急数据处理，不影响正常通信
+            client.sendUrgentData(0);
             return false;
         } catch (Exception se) {
             return true;
@@ -109,7 +111,7 @@ public class CaptureServer implements Runnable {
     }
 
     private void close() throws IOException {
-        Log.i(LOG_TAG, "No data, close capture server socket");
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "No data, close capture server socket");
         if (client != null)
             client.close();
         if (streamOut != null)
@@ -122,45 +124,10 @@ public class CaptureServer implements Runnable {
         // TODO Auto-generated method stub
         streamOut = new DataOutputStream(new BufferedOutputStream(client.getOutputStream()));
     }
-
-//    @Override
-//    public void run() {
-//        // TODO Auto-generated method stub
-//        Log.i(LOG_TAG, "Create capture thread begin1122222");
-//
-//        while (true)
-//        {
-//            try
-//            {
-//                ServerSocket serverSocket = new ServerSocket(CAPTURE_PORT);
-//                Socket client = serverSocket.accept();
-//                Log.i(LOG_TAG, "accept ");
-//                DataOutputStream os = new DataOutputStream(client.getOutputStream());
-//                while (true) {
-//                    //sleep 5s
-//                    SystemClock.sleep(400);
-//                    if (client == null)
-//                        break;
-//
-//                    byte[] buffer = prepareCaptureMessage();
-//                    if (buffer != null) {
-//                        os.write(buffer);
-//                        os.flush();
-//                    }
-//                }
-//                os.close();
-//
-//            } catch (Exception e)
-//            {
-//                Log.i(LOG_TAG, "got exception begin?!!!");
-//                e.printStackTrace();
-//                Log.i(LOG_TAG, "got exception end ?!");
-//            }
-//        }
-//    }
     
     private byte[] prepareCaptureMessage() {
-        Log.i(LOG_TAG, "prepareCaptureMessage activity " + mActivity.hashCode());
+        if (LOGD_ENABLED)
+            Log.d(LOG_TAG, "prepareCaptureMessage activity " + mActivity.hashCode());
 
         View v = mActivity.getWindow().getDecorView();
         if (v == null)
@@ -170,37 +137,27 @@ public class CaptureServer implements Runnable {
         int height = v.getHeight();
         Rect outRect = new Rect();
         v.getWindowVisibleDisplayFrame(outRect);
-        
+
         height = height - outRect.top;
-        Log.i(LOG_TAG, "prepareCaptureMessage activity height:" + height);
+        if (LOGD_ENABLED)
+            Log.d(LOG_TAG, "prepareCaptureMessage activity height:" + height);
+        Bitmap bmp = null;
         if (mInsideUI) {
             ((TBTNaviDemoMapView) mActivity).createTestMessage();
 
-            Bitmap bmp = mCaptureClerk.getCaptureProduct();
-
-            ByteArrayOutputStream os = new ByteArrayOutputStream();
-            bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
-            byte[] byteArray = os.toByteArray();
-
-            pos++;
-            Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
-
-            return new MessageBody(width, height, byteArray.length, byteArray).getBuf();
+            bmp = mCaptureClerk.getCaptureProduct();
+        } else {
+            bmp = Utils.createScreenshot3(v, width, height);
         }
-
-         Bitmap bmp = Utils.createScreenshot3(v, width, height);
-
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
-
-        // TEST
-        pos++;
-        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
-
         byte[] byteArray = os.toByteArray();
-        Log.i(LOG_TAG, "prepareCaptureMessage end 222");
-        return new MessageBody(width, height, byteArray.length, byteArray).getBuf();
+
+//        pos++;
+//        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
+
+        return new MessageBody(outRect.left, outRect.top, width, height, byteArray.length, byteArray).getBuf();
     }
 
 }

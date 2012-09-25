@@ -1739,11 +1739,13 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case EXIT_TBTNAVI:
-			return new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.quit).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+			Dialog d = new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.quit).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					destroyTBTApplication();
 				}
 			}).setNegativeButton(R.string.cancel, null).create();
+			DialogArray.append(d.hashCode(), d);
+			return d;
 		default:
 			break;
 		}

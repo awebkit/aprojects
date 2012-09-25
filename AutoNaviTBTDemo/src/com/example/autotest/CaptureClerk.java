@@ -9,6 +9,7 @@ public class CaptureClerk {
  
     private Bitmap bmp = null;
     private static String LOG_TAG = "tbt";
+    private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;
     
     public synchronized void setProduct(int product) { 
         while(this.product != -1) { 
@@ -21,7 +22,7 @@ public class CaptureClerk {
         }   
  
         this.product = product; 
-        Log.i(LOG_TAG, "producer set " + this.product); 
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "producer set " + this.product); 
 
         notify(); 
     }
@@ -41,7 +42,7 @@ public class CaptureClerk {
         }
         
         int p = this.product;
-        Log.i(LOG_TAG, "consumer got " + this.product);
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "consumer got " + this.product);
         this.product = -1;
 
         // notify producer go on
@@ -61,7 +62,7 @@ public class CaptureClerk {
         }   
  
         this.bmp = product; 
-        Log.i(LOG_TAG, "producer set " + this.bmp.hashCode()); 
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "producer set " + this.bmp.hashCode()); 
 
         notify(); 
     } 
@@ -78,7 +79,7 @@ public class CaptureClerk {
         }
         
         Bitmap p = this.bmp;
-        Log.i(LOG_TAG, "consumer got " + this.bmp.hashCode());
+        if (LOGD_ENABLED) Log.d(LOG_TAG, "consumer got " + this.bmp.hashCode());
         this.bmp = null;
 
         // notify producer go on

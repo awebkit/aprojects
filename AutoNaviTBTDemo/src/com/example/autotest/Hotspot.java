@@ -10,6 +10,7 @@ import android.util.Log;
 
 public class Hotspot implements Runnable {
 
+    private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;
     private static String LOG_TAG = "hotspot";
     private static final String SSID = "ANDROIDTEST";
     private Activity mActivity;
@@ -19,7 +20,7 @@ public class Hotspot implements Runnable {
     }
     @Override
     public void run() {
-        Log.i(LOG_TAG,"Create hotspot thread begin" );
+        if (LOGD_ENABLED) Log.d(LOG_TAG,"Create hotspot thread begin" );
         // disable wifi 
         WifiManager wifiManager = (WifiManager) mActivity.getSystemService(Context.WIFI_SERVICE);
         wifiManager.setWifiEnabled(false);
@@ -38,7 +39,7 @@ public class Hotspot implements Runnable {
         } catch (Exception e) {  
             e.printStackTrace();  
         }  
-        Log.i(LOG_TAG,"Create hotspot thread end" );
+        if (LOGD_ENABLED) Log.d(LOG_TAG,"Create hotspot thread end" );
     }
 
 }

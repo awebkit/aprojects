@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.View;
 
 public class Utils {
+    
+    public final static boolean LOGD_ENABLED = true;
 //    private static Bitmap mCapture;
 //    
 //    public static void initBitmap(int thumbnailWidth, int thumbnailHeight){

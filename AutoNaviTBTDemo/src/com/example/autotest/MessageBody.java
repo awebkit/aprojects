@@ -65,14 +65,14 @@ public class MessageBody {
     
     private byte[] buf;
     
-    public MessageBody(int w, int h, int buflen, byte[] os){        
+    public MessageBody(int left, int top, int w, int h, int buflen, byte[] os){        
         //
         msg = MSG_ID_IMAGE;        
         type = 5;        
         bits = 16;
         
-        x = 0;        
-        y = 0;        
+        x = left;        
+        y = top;        
         width = w;        
         height = h;
         
