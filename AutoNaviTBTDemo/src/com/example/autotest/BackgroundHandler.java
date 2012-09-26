@@ -20,8 +20,7 @@ public class BackgroundHandler {
 
     public static void init(Activity activity){
         //Start hotspot first because it needs time.
-        //for test
-        //execute(new Hotspot(activity));
+        execute(new Hotspot(activity));
         //
         mCaptureServer = new CaptureServer(activity);
         execute(mCaptureServer);

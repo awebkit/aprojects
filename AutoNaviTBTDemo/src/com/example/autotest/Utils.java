@@ -19,7 +19,7 @@ import android.view.View;
 
 public class Utils {
     
-    public final static boolean LOGD_ENABLED = true;
+    public final static boolean LOGD_ENABLED = false;
 //    private static Bitmap mCapture;
 //    
 //    public static void initBitmap(int thumbnailWidth, int thumbnailHeight){
@@ -49,7 +49,7 @@ public class Utils {
 //        return null;
 //    }
     
-    public static Bitmap createScreenshot3(View view, int thumbnailWidth, int thumbnailHeight) {
+    public static Bitmap createScreenshot3(View view, int thumbnailWidth, int thumbnailHeight, int top) {
         if (view != null) {
             Bitmap mCapture;
             try {
@@ -61,7 +61,7 @@ public class Utils {
             Canvas c = new Canvas(mCapture);
 //            final int left = view.getScrollX();
 //            final int top = view.getScrollY();
-//            c.translate(-left, -top);
+            c.translate(0, -top);
             //c.scale(0.65f, 0.65f, left, top);
             try {
                 // draw webview may nullpoint
@@ -100,7 +100,7 @@ public class Utils {
         return null;
     }
     
-    public static Bitmap createPngScreenshot(View view, int thumbnailWidth, int thumbnailHeight) {
+    public static Bitmap createPngScreenshot(View view, int thumbnailWidth, int thumbnailHeight, int top) {
         if (view != null) {
             Bitmap mCapture;
             try {
@@ -112,7 +112,7 @@ public class Utils {
             Canvas c = new Canvas(mCapture);
 //            final int left = view.getScrollX();
 //            final int top = view.getScrollY();
-//            c.translate(-left, -top);
+            c.translate(0, -top);
             //c.scale(0.65f, 0.65f, left, top);
             try {
                 // draw webview may nullpoint
@@ -124,6 +124,30 @@ public class Utils {
         return null;
     }
     
+    public static Bitmap createPngScreenshot2(View view, int thumbnailWidth, int thumbnailHeight, int top) {
+        if (view != null) {
+            Bitmap mCapture;
+            try {
+                mCapture = Bitmap.createBitmap(thumbnailWidth, thumbnailHeight,
+                        Bitmap.Config.ARGB_8888);
+            } catch (OutOfMemoryError e) {
+                return null;
+            }   
+            Canvas c = new Canvas(mCapture);
+            c.drawColor(Color.WHITE);
+//            final int left = view.getScrollX();
+//            final int top = view.getScrollY();
+            c.translate(0, -top);
+            //c.scale(0.65f, 0.65f, left, top);
+            try {
+                // draw webview may nullpoint
+                view.draw(c);
+            } catch (Exception e) {
+            }
+            return mCapture;
+        }
+        return null;
+    }
     
     public static boolean saveScreenshot(Activity activity, String fileName, 
             Bitmap screenshot, boolean sdcard) {
@@ -225,14 +249,39 @@ public class Utils {
         Bitmap newBitmap = Bitmap.createBitmap(first.getWidth(), first.getHeight(), Bitmap.Config.RGB_565);  
         Canvas cv = new Canvas(newBitmap); 
         Paint paint = new Paint();
-        int alpha = (int) (255 * dimAmount);
-        paint.setAlpha(alpha);
+        if (dimAmount != 0){
+            int alpha = (int) (255 * dimAmount);
+            paint.setAlpha(alpha);
+        }
         cv.drawBitmap(first, 0, 0, paint);
         
         Paint paint2 = new Paint();
         paint2.setColor(Color.TRANSPARENT);
         
         cv.drawBitmap(second, fromPoint.x, fromPoint.y, null);  
+        cv.save(Canvas.ALL_SAVE_FLAG);  
+        cv.restore();  
+        return newBitmap;  
+    }
+    
+    public static Bitmap mixtureBitmap2(Bitmap first, Bitmap second, PointF fromPoint, float dimAmount, float usealpha) {  
+        if (first == null || second == null || fromPoint == null) {  
+            return null;  
+        }  
+        Bitmap newBitmap = Bitmap.createBitmap(first.getWidth(), first.getHeight(), Bitmap.Config.RGB_565);  
+        Canvas cv = new Canvas(newBitmap); 
+        Paint paint = new Paint();
+        if (dimAmount != 0){
+            int alpha = (int) (255 * dimAmount);
+            paint.setAlpha(alpha);
+        }
+        cv.drawBitmap(first, 0, 0, paint);
+        
+        Paint paint2 = new Paint();
+        paint2.setColor(Color.WHITE);
+        paint2.setAlpha((int) (255 * usealpha));
+        
+        cv.drawBitmap(second, fromPoint.x, fromPoint.y, paint2);  
         cv.save(Canvas.ALL_SAVE_FLAG);  
         cv.restore();  
         return newBitmap;  

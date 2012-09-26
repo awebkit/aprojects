@@ -147,7 +147,7 @@ public class CaptureServer implements Runnable {
 
             bmp = mCaptureClerk.getCaptureProduct();
         } else {
-            bmp = Utils.createScreenshot3(v, width, height);
+            bmp = Utils.createScreenshot3(v, width, height, outRect.top);
         }
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();

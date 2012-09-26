@@ -52,6 +52,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
@@ -82,6 +83,7 @@ import com.autonavi.tbt.navi.SetGPSInfor;
 import com.example.autotest.BackgroundHandler;
 import com.example.autotest.CaptureClerk;
 import com.example.autotest.CaptureServer;
+import com.example.autotest.InvokeMenuBuilder;
 import com.example.autotest.Utils;
 import com.iflytek.tts.TtsService.Tts;
 
@@ -181,6 +183,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	private String LOG_TAG = "TBT";
 	
 	private SparseArray<Dialog> DialogArray;
+	private Menu mMenu;
+	private Toast mToast;
+	private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -304,7 +309,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 			
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(getApplicationContext(), "点击地图选择目的地", Toast.LENGTH_LONG).show();
+				Toast t = Toast.makeText(getApplicationContext(), "点击地图选择目的地", Toast.LENGTH_LONG);
+				t.show();
+				mToast = t;
 				mMapView.getOverlays().add(overlay);
 			}
 		});
@@ -435,6 +442,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu, menu);
+		mMenu = menu;
 		return true;
 	}
 	
@@ -1120,15 +1128,15 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 			   
             }
             else if(msg.what == TBT_AUTOTEST_MSG){
-                Log.i(LOG_TAG, "******** begin capture0  ----------->");
+                if (LOGD_ENABLED) Log.d(LOG_TAG, "******** begin capture0  ----------->");
                 View v = getWindow().getDecorView();
                 Rect vRect = new Rect();
                 v.getWindowVisibleDisplayFrame(vRect);
-                mCapture = Utils.createPngScreenshot(v, v.getWidth(), v.getHeight() - vRect.top);
+                mCapture = Utils.createPngScreenshot(v, v.getWidth(), v.getHeight() - vRect.top, vRect.top);
                 for (int i = 0; i < DialogArray.size(); ++i){
                     Dialog d = DialogArray.valueAt(i);
                     if (d != null && d.isShowing()){
-                        Log.i(LOG_TAG, "======= dialog " + d.hashCode());
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= dialog " + d.hashCode());
                         Window w = d.getWindow();
                         
                         View dialogView = w.getDecorView();
@@ -1140,13 +1148,13 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
                         int g = lp.gravity;
                         if (g == 48) {//
                             float x = lp.x;
-                            float y = outRect.top / 2 + lp.y;
+                            float y = lp.y;
                             fromPoint = new PointF(x, y);                            
                         } else if (g == 17){
                             DisplayMetrics outMetrics = new DisplayMetrics();
                             getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
                             float x = (outMetrics.widthPixels - dialogView.getWidth())/ 2 + lp.x;
-                            float y = (outMetrics.heightPixels - dialogView.getHeight() )/ 2 + outRect.top / 2 + lp.y;
+                            float y = (outMetrics.heightPixels - dialogView.getHeight() )/ 2 + lp.y;
                             fromPoint = new PointF(x, y);
                         }
                         
@@ -1155,17 +1163,42 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
                        
                         height = height - outRect.top;
                         if (width > 0 && height > 0){
-                            Bitmap second = Utils.createPngScreenshot(dialogView, width, height);
+                            Bitmap second = Utils.createPngScreenshot(dialogView, width, height, 0);
                             mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint, lp.dimAmount);
                         }
                         break; //only one dialog
                     }
 
                 }
+                
+                //for options menu
+                if (mMenu != null){
+                    View mv = InvokeMenuBuilder.getMenuView(mMenu, 0, (ViewGroup)v);
+                    if (mv.getWidth() > 0 && mv.isShown()){
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + mv.getHeight());
+                        Bitmap second = Utils.createPngScreenshot2(mv, mv.getWidth(), mv.getHeight(), 0);
+                        PointF fromPoint = new PointF(0, v.getHeight() - vRect.top - mv.getHeight());
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
+                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 0.9);
+                    }
+                }
 
+                //for toast
+                if (mToast != null){
+                    View tv = mToast.getView();
+                    if (tv.getWidth() > 0 && tv.isShown()){
+                        if (LOGD_ENABLED) Log.i(LOG_TAG, "==== " + tv.getWidth() + " " + tv.getHeight());
+                        Bitmap second = Utils.createPngScreenshot(tv, tv.getWidth(), tv.getHeight(), 0);
+                        if (LOGD_ENABLED) Log.d(LOG_TAG, "====== gravity " + mToast.getGravity() + " x y " + mToast.getXOffset() + " " 
+                                + mToast.getYOffset() + " " + mToast.getHorizontalMargin() + " " + mToast.getVerticalMargin());
+                        PointF fromPoint = new PointF((v.getWidth() - tv.getWidth()) / 2, v.getHeight() - vRect.top - mToast.getYOffset() - tv.getHeight());
+                        if (LOGD_ENABLED) Log.i(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
+                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 1.0);
+                    }        
+                }
                 mCaptureClerk.setCaptureProduct(mCapture);
                 
-                Log.i(LOG_TAG, "******** end  capture  ----------->");
+                Log.d(LOG_TAG, "******** end  capture  ----------->");
             }            
             else if (msg.what == ON_CAR_LOCATION_CHANGE) {
 	
