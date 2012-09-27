@@ -1,0 +1,7 @@
+Exception: STATUS_ACCESS_VIOLATION at eip=6102048B
+eax=00B7DBB0 ebx=612438E4 ecx=75107BBE edx=002E51F8 esi=00000000 edi=0022FA10
+ebp=61020C00 esp=0022C7E0 program=D:\Android\cygwin\bin\sh.exe, pid 5188, thread main
+cs=001B ds=0023 es=0023 fs=003B gs=0000 ss=0023
+Stack trace:
+Frame     Function  Args
+End of stack trace

@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.autonavi.tbt.demo"
+    android:versionCode="1"
+    android:versionName="1.0" xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-sdk android:minSdkVersion="7" />
+    <permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"></permission>
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name" android:name="TBTNaviDemoRouteData">
+        <activity
+            android:name=".AutoNaviTBTDemoActivity"
+            android:label="@string/app_name" android:theme="@android:style/Theme.NoTitleBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="TBTNaviWarningActivity" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:theme="@android:style/Theme.NoTitleBar" android:name="TBTNaviDemoSearch">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:theme="@android:style/Theme.NoTitleBar" android:name="TBTNaviDemoMapView" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="TBTNaviDemoRouteProfile" android:theme="@android:style/Theme.NoTitleBar"></activity>
+        <activity android:name="TBTNaviDemoSearchPoiDetail" android:theme="@android:style/Theme.NoTitleBar"></activity>
+    </application>
+    
+	<!-- ************************************* -->
+	<!--      定位相关权限      -->
+	<!-- ************************************* -->
+	<uses-permission android:name="android.permission.RECORD_AUDIO">
+	</uses-permission>
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.CALL_PHONE">
+    </uses-permission>
+</manifest>

@@ -1,0 +1,388 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:autonavi="http://schemas.android.com/apk/res/com.amap"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/layout_search_bg" >
+
+    <TextView
+        android:id="@+id/tvStreetName"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:background="@drawable/top_bar"
+        android:gravity="center"
+        android:singleLine="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvGPSbg"
+        android:layout_width="142dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/layout_main_gps_bg" />
+
+
+    <TextView
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/tvGPSbg"
+        android:layout_alignTop="@+id/tvGPSbg"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/layout_main_icon_gps" />
+
+    <TextView
+        android:id="@+id/tvGPSVelocity"
+        android:layout_width="90dp"
+        android:layout_height="38dp"
+        android:layout_alignLeft="@+id/tvGPSbg"
+        android:layout_alignTop="@+id/tvGPSbg"
+        android:layout_marginLeft="51dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="0km/h"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvDirection"
+        android:layout_width="90dp"
+        android:layout_height="38dp"
+        android:layout_alignLeft="@+id/tvGPSbg"
+        android:layout_alignTop="@+id/tvGPSbg"
+        android:layout_marginLeft="51dp"
+        android:layout_marginTop="41dp"
+        android:gravity="center"
+        android:text="无方向"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvDestbg"
+        android:layout_width="142dp"
+        android:layout_height="80dp"
+        android:layout_marginLeft="166dp"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/layout_main_gps_bg" />
+    
+    <Button
+        android:id="@+id/btnRouteProfile"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_alignLeft="@+id/tvDestbg"
+        android:layout_alignTop="@+id/tvDestbg"
+        android:layout_marginLeft="6dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/layout_main_icon_destination" />
+
+    <TextView
+        android:id="@+id/tvDestDistance"
+        android:layout_width="90dp"
+        android:layout_height="38dp"
+        android:layout_alignLeft="@+id/tvDestbg"
+        android:layout_alignTop="@+id/tvDestbg"
+        android:layout_marginLeft="51dp"
+        android:layout_marginTop="1dp"
+        android:gravity="center"
+        android:text="0km"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/tvDestETA"
+        android:layout_width="90dp"
+        android:layout_height="38dp"
+        android:layout_alignLeft="@+id/tvDestbg"
+        android:layout_alignTop="@+id/tvDestbg"
+        android:layout_marginLeft="51dp"
+        android:layout_marginTop="41dp"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@android:color/white" />
+
+    <RelativeLayout
+        android:layout_width="296dp"
+        android:layout_height="212dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="149dp"
+        android:background="@drawable/layout_main_direction_bg" >
+        
+        <ImageButton 
+            android:id="@+id/ibTrafficPanel"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="0dp"
+            android:visibility="invisible"/>
+        
+        <ImageButton 
+            android:id="@+id/ibCross"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="40dp"
+            android:visibility="invisible"/>
+    
+    	<ImageView
+	        android:id="@+id/ivGuideArrowBigView"
+	        android:layout_width="100dp"
+	        android:layout_height="120dp"
+	        android:layout_marginLeft="79dp"
+	        android:layout_marginTop="7dp" />
+
+    	<TextView
+    	    android:id="@+id/tvSegmentRemainDist"
+    	    android:layout_width="100dp"
+    	    android:layout_height="46dp"
+    	    android:layout_marginLeft="79dp"
+	        android:layout_marginTop="127dp"
+	        android:gravity="center"
+	        android:textAppearance="?android:attr/textAppearanceMedium" />
+    	
+    	<ImageView
+		    android:id="@+id/ivLaneInfoView"
+		    android:layout_width="235dp"
+		    android:layout_height="28dp"
+		    android:layout_marginLeft="12dp"
+	        android:layout_marginTop="173dp"
+	        android:gravity="center" />
+
+    	<RelativeLayout
+    	    android:layout_width="35dp"
+    	    android:layout_height="200dp"
+    	    android:layout_marginLeft="255dp"
+	        android:layout_marginTop="3dp" >
+	        
+    	    <ImageView
+    	        android:id="@+id/ivDistanceBarBg"
+    	        android:layout_width="fill_parent"
+    	        android:layout_height="fill_parent"
+    	        android:src="@drawable/layout_main_bg_8km"/>
+    	    <ImageView
+	    	    android:id="@+id/ivDistanceBar"
+	    	    android:layout_width="24dp"
+	    	    android:layout_height="170dp"
+	    	    android:layout_marginLeft="5dp"
+		        android:layout_marginTop="25dp" />
+		        
+    	    
+    	</RelativeLayout>
+    	
+    	
+
+    </RelativeLayout>
+
+	<Button
+        android:id="@+id/btnSearch"
+        android:layout_width="296dp"
+        android:layout_height="41dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="374dp"
+        android:text="搜 索"
+        android:textSize="20dp"
+        android:textColor="@android:color/white"
+        android:background="@drawable/warning_layout_agreed" />
+	
+	<TextView
+        android:id="@+id/tvMarqueeInfo"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="427dp"
+        android:background="@drawable/layout_main_marquee_bg"
+        android:ellipsize="marquee"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:marqueeRepeatLimit="1"
+        android:scrollHorizontally="true"
+        android:singleLine="true"
+        android:textSize="16dp" />
+	
+	<SlidingDrawer 
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent" 
+		android:handle="@+id/handle"
+		android:content="@+id/content" 
+		android:orientation="vertical"
+		android:id="@+id/slidingdrawer">
+
+		<Button 
+			android:id="@id/handle" 
+			android:layout_width="wrap_content"
+			android:layout_height="40dp"
+			android:text="打开地图"
+			 />
+			<!-- android:background="@drawable/arrow_up_float" -->
+	
+		<FrameLayout android:id="@id/content"
+			android:layout_width="fill_parent" android:layout_height="fill_parent" 
+			android:background="#ffffff">
+		
+			<com.amap.mapapi.map.MapView android:id="@+id/mapView"
+				android:layout_width="fill_parent" android:layout_height="fill_parent"
+				android:clickable="true" android:apiKey="@string/maps_api_key" />
+			
+			<RelativeLayout 
+			    android:id="@+id/flGuideItemMap"
+			    android:layout_gravity="top"
+			    android:background="@drawable/layout_search_bg"
+			    android:layout_width="320dp"
+			    android:layout_height="105dp"
+			    android:layout_marginTop="0dp">
+			    
+			    <!-- 当前导航段转折动作 -->
+			    <ImageView
+			        android:id="@+id/ivGuideArrowMap"
+			        android:layout_width="93dp"
+			        android:layout_height="68dp"
+			        android:layout_marginLeft="0dp"
+			        android:layout_marginTop="0dp" />
+			    
+			    <!-- 当前导航段剩余距离 -->
+			    <TextView
+		    	    android:id="@+id/tvSegmentRemainDistMap"
+		    	    android:layout_width="93dp"
+		    	    android:layout_height="37dp"
+		    	    android:layout_marginLeft="0dp"
+			        android:layout_marginTop="68dp"
+			        android:gravity="center"
+			        android:textAppearance="?android:attr/textAppearanceLarge" />
+			    
+			    <!-- 下一道路名称 -->
+			    <TextView
+		    	    android:id="@+id/tvNextStreetNameMap"
+		    	    android:layout_width="227dp"
+		    	    android:layout_height="62dp"
+		    	    android:layout_marginLeft="93dp"
+			        android:layout_marginTop="0dp"
+			        android:gravity="center"
+			        android:textAppearance="?android:attr/textAppearanceLarge" />
+			    
+			    			    
+			    <!-- 当前路径剩余距离 -->
+			    <ImageView
+			        android:layout_width="40dp"
+			        android:layout_height="40dp"
+			        android:layout_marginLeft="101dp"
+			        android:layout_marginTop="62dp"
+			        android:background="@drawable/end_point_map" />
+			    
+			    <TextView
+		    	    android:id="@+id/tvRouteRemainDistMap"
+		    	    android:layout_width="113dp"
+		    	    android:layout_height="42dp"
+		    	    android:layout_marginLeft="141dp"
+			        android:layout_marginTop="62dp"
+			        android:gravity="left|center"
+			        android:textAppearance="?android:attr/textAppearanceLarge" />
+			    
+			    <!-- 当前路径剩余时间 -->
+			    <ImageView
+			        android:layout_width="30dp"
+			        android:layout_height="40dp"
+			        android:layout_marginLeft="208dp"
+			        android:layout_marginTop="62dp"
+			        android:background="@drawable/time" />
+			    <TextView
+		    	    android:id="@+id/tvRouteRemainTimeMap"
+		    	    android:layout_width="113dp"
+		    	    android:layout_height="42dp"
+		    	    android:layout_marginLeft="238dp"
+			        android:layout_marginTop="62dp"
+			        android:gravity="left|center"
+			        android:textAppearance="?android:attr/textAppearanceLarge" />
+			    
+			</RelativeLayout>
+			
+			<!-- 情报板forMap -->
+			<ImageButton 
+	            android:id="@+id/ibTrafficPanelMap"
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_gravity="top|left" 
+	            android:layout_marginTop="175dp" 
+				android:layout_marginLeft="10dp"
+	            android:visibility="invisible"/>
+        	
+			<!-- 扩大图forMap -->
+	        <ImageButton 
+	            android:id="@+id/ibCrossMap"
+	            android:layout_width="60dp"
+	            android:layout_height="60dp"
+	            android:layout_gravity="top|left" 
+	            android:layout_marginTop="110dp" 
+				android:layout_marginLeft="10dp"
+	            android:visibility="invisible"/>
+	        
+	        <!-- 车线信息forMap -->
+	        <ImageView
+			    android:id="@+id/ivLaneInfoViewMap"
+			    android:layout_width="wrap_content"
+			    android:layout_height="wrap_content"
+			    android:layout_gravity="top|right" 
+	            android:layout_marginTop="105dp"
+	            android:layout_marginRight="10dp"
+	            android:visibility="invisible" />
+			
+			<!-- 光柱forMap -->
+			<RelativeLayout
+			    android:id="@+id/rlTMCBarMap"
+	    	    android:layout_width="35dp"
+	    	    android:layout_height="200dp"
+	    	    android:layout_gravity="center|right"
+				android:layout_marginRight="10dp"
+				android:visibility="invisible" >
+		        
+	    	    <ImageView
+	    	        android:id="@+id/ivDistanceBarBgMap"
+	    	        android:layout_width="fill_parent"
+	    	        android:layout_height="fill_parent"
+	    	        android:src="@drawable/layout_main_bg_8km"/>
+	    	    <ImageView
+		    	    android:id="@+id/ivDistanceBarMap"
+		    	    android:layout_width="24dp"
+		    	    android:layout_height="170dp"
+		    	    android:layout_marginLeft="5dp"
+			        android:layout_marginTop="25dp" />	    	    
+	    	</RelativeLayout>"
+		 
+		 	<!-- 地图选点按钮forMap 
+			<ImageButton android:id="@+id/ibDestLayer"
+				android:layout_gravity="bottom|right" 
+				android:background="@android:color/transparent"
+				android:layout_width="40dp" 
+				android:layout_height="40dp"
+				android:src="@drawable/map_layers"
+				android:layout_marginBottom="25dp" 
+				android:layout_marginRight="10dp" /> -->
+			
+			<!-- 北上or车头向上按钮forMap -->
+			<ImageButton android:id="@+id/ibNorthUpMap"
+			    android:background="@android:color/transparent"
+				android:layout_gravity="bottom|left" 
+				android:layout_width="40dp" 
+				android:layout_height="40dp"
+				android:src="@drawable/north_up_icon"
+				android:layout_marginBottom="25dp" 
+				android:layout_marginLeft="10dp" />
+			
+			<!-- 回到自车位置按钮forMap -->
+			<ImageButton android:id="@+id/ibBackToCar"
+			    android:background="@android:color/transparent"
+				android:layout_gravity="bottom|right" 
+				android:layout_width="wrap_content" 
+				android:layout_height="wrap_content"
+				android:src="@drawable/layout_guide_turn_21_small"
+				android:layout_marginBottom="25dp" 
+				android:layout_marginRight="10dp" />
+			
+		</FrameLayout>
+		
+		
+
+	</SlidingDrawer>
+	    
+</RelativeLayout>

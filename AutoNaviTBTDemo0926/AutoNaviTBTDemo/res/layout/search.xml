@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/layout_search_bg" >
+
+    <TextView
+        android:id="@+id/tvSearchTitle"
+        android:layout_width="320dp"
+        android:layout_height="45dp"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:focusable="true"
+ 	android:focusableInTouchMode="true"
+        android:text="搜  索"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/white"
+        android:gravity="center"
+        android:background="@drawable/top_bar" />
+
+	<Button
+        android:id="@+id/btn_search_back"
+        android:layout_width="61dp"
+        android:layout_height="29dp"
+        android:layout_marginLeft="13dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/layout_search_btnmode_back" />
+    
+    <EditText
+        android:id="@+id/edt_search_edit"
+        android:layout_width="226dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="57dp" >
+    </EditText>
+
+    <Button
+        android:id="@+id/btn_search_normal"
+        android:layout_width="70dp"
+        android:layout_height="37dp"
+        android:layout_marginLeft="238dp"
+        android:layout_marginTop="57dp"
+        android:background="@drawable/layout_search_btnmode_search" />
+
+	<RelativeLayout 
+	   android:layout_width="380dp"
+        android:layout_height="fill_parent"
+        android:layout_gravity="top|bottom"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="106dp"
+	android:layout_marginBottom="0dp"
+        android:background="@drawable/layout_search_history_bg">
+        
+    
+        <TextView
+	        android:id="@+id/tvTitleHistory"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="19dp"
+	        android:layout_marginTop="0dp"
+	        android:background="@drawable/layout_search_title_history" />
+	
+	    <ListView
+	        android:id="@+id/lvPoi"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:layout_marginLeft="20dp"
+	        android:layout_marginTop="9dp"
+	        android:cacheColorHint="#00000000"
+	        android:layout_below="@id/tvTitleHistory" >
+	    </ListView>
+    
+    
+    </RelativeLayout>
+
+	<Button
+	    android:id="@+id/btn_search_normal_iat"
+	    android:layout_width="wrap_content"
+	    android:layout_height="wrap_content"
+	    android:layout_alignParentTop="true"
+	    android:layout_alignRight="@+id/btn_search_normal"
+	    android:text="语音识别" />
+   
+</RelativeLayout>
