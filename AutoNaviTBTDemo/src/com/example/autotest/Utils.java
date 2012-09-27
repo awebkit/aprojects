@@ -135,7 +135,7 @@ public class Utils {
                 return null;
             }   
             Canvas c = new Canvas(mCapture);
-            c.drawColor(Color.WHITE);
+            c.drawColor(Color.BLACK);
 //            final int left = view.getScrollX();
 //            final int top = view.getScrollY();
             c.translate(0, -top);

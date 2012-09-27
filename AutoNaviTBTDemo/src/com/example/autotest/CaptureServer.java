@@ -124,6 +124,8 @@ public class CaptureServer implements Runnable {
 
         int width = v.getWidth();
         int height = v.getHeight();
+        if (width <=0 || height <=0)
+            return null;
         Rect outRect = new Rect();
         v.getWindowVisibleDisplayFrame(outRect);
 
@@ -132,6 +134,8 @@ public class CaptureServer implements Runnable {
             Log.d(LOG_TAG, "prepareCaptureMessage activity height:" + height);
         Bitmap bmp = ScreenShotHelper.getCapture();
 
+        if (bmp == null)
+            return null;
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
         byte[] byteArray = os.toByteArray();
