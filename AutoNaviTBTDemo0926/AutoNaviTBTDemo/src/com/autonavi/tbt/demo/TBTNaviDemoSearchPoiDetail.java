@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.amap.mapapi.core.PoiItem;
+import com.example.autotest.ScreenShotHelper;
 
 public class TBTNaviDemoSearchPoiDetail extends Activity {
 	
@@ -44,6 +45,8 @@ public class TBTNaviDemoSearchPoiDetail extends Activity {
 		tvTelephoneDetail.setText(poi.getTel());
 		tvZipCodeDetail = (TextView) findViewById(R.id.tvZipCodeDetail);
 		tvZipCodeDetail.setText(poi.getAdCode());
+		
+		ScreenShotHelper.setActivity(this);
 	}
 
 	private OnClickListener onClick = new OnClickListener() {

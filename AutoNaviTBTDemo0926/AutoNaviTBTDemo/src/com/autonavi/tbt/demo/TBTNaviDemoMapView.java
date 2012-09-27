@@ -76,6 +76,7 @@ import com.autonavi.tbt.TmcBar;
 import com.autonavi.tbt.navi.FrameForTBT;
 import com.autonavi.tbt.navi.NmeaData;
 import com.autonavi.tbt.navi.SetGPSInfor;
+import com.example.autotest.ScreenShotHelper;
 import com.iflytek.tts.TtsService.Tts;
 
 public class TBTNaviDemoMapView extends MapActivity implements LocationListener, OnTouchListener, OnGestureListener {
@@ -102,6 +103,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	private static final int START_GPS_NAVIGATION = 0x000000012;
 	private static final int START_EMULATOR_NAVIGATION = 0x000000013;
 	private static final int UPDATE_GPS_VIEW_INFO_2 = 0x00000014;
+	private static final int AUTOTEST_SCREENSHOT_MSG = 0x00000020;
 	
 	private SlidingDrawer mDrawer;
 	private Boolean flag=false;
@@ -226,6 +228,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d); 
 				}
 			}
 		});
@@ -237,6 +240,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				if (mCrossExists) {
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d); 
 				}
 			}
 		});
@@ -356,8 +360,10 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
         if(iRet == 0)
         {
         	System.out.println("TBT初始化失败");
-        	Toast.makeText(TBTNaviDemoMapView.this, "TBT初始化失败!",           
-					Toast.LENGTH_LONG).show(); 
+        	Toast t = Toast.makeText(TBTNaviDemoMapView.this, "TBT初始化失败!",           
+					Toast.LENGTH_LONG);
+        	t.show(); 
+        	ScreenShotHelper.registerToast(t);
         	//return;
         }
         else
@@ -395,8 +401,11 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		//Test
 		SetGPSInfor GPSInfor = new SetGPSInfor(this, mTbt);
 		GPSInfor.start();
-        
+		
+		ScreenShotHelper.setActivity(this);
+		ScreenShotHelper.captureInsideActivity(this);
 	}
+
 	private TTSHandler mTTSHandler= null;
 	
 	private int nWidth, nHeight;
@@ -417,6 +426,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu, menu);
+		ScreenShotHelper.registerMenu(menu);
 		return true;
 	}
 	
@@ -448,7 +458,13 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		mHandler.sendMessage(mess);
 	}
 	// added end by changgy
-	
+	   
+    public void createScreenShotMessage() {
+        Message message = new Message();
+        message.what = AUTOTEST_SCREENSHOT_MSG;
+        mHandler.sendMessage(message);
+    }
+    
 	private static boolean inGuideStatus = false;//GPS导航
 	private static boolean simNaviState = false;//模拟导航
 	int navitype;
@@ -528,6 +544,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					}
 				}).create();
 				mAlertDialog.show();
+				ScreenShotHelper.registerDialog(mAlertDialog); 
 			}
 			
 			naviOverlay = new NaviLineOverlay();
@@ -550,6 +567,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		if (routeResult != 1) {
 			mAlertDialog = new AlertDialog.Builder(this).setTitle(str).setPositiveButton(R.string.ok, null).create();
 			mAlertDialog.show();
+			ScreenShotHelper.registerDialog(mAlertDialog);
 		}
 	}
 	
@@ -914,6 +932,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 			
@@ -921,6 +940,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				if (mCrossExists) {
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 			
@@ -930,6 +950,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 			
@@ -937,6 +958,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				if (mCrossExists) {
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 		}
@@ -946,7 +968,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	double mDestLat = 0;
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    	super.onActivityResult(requestCode, resultCode, data);    	
+    	super.onActivityResult(requestCode, resultCode, data);
+        ScreenShotHelper.setActivity(this);
+        ScreenShotHelper.captureInsideActivity(this);
     	if (requestCode == ACTIVITY_SEARCH) {
             if (resultCode == RESULT_OK) {
                 // 增加检索结果算路代码
@@ -1067,6 +1091,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		})*/.create();
 
 		alertDialog.show();
+		ScreenShotHelper.registerDialog(alertDialog);
 	}
     
 	public void setCCP(double longitude, double latitude) {		
@@ -1233,10 +1258,13 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
             	mpDialog.setMessage("路径请求中...");
             	mpDialog.setCancelable(true);
             	mpDialog.show();
+            	ScreenShotHelper.registerDialog(mpDialog);
             }
             else if (msg.what == SHOW_ROUTE_FOR_TMC_HINT) {
-            	Toast.makeText(getApplicationContext(), "前方路况变化，重新计算路线中。。。",
-    					Toast.LENGTH_LONG).show();
+            	Toast t = Toast.makeText(getApplicationContext(), "前方路况变化，重新计算路线中。。。",
+    					Toast.LENGTH_LONG);
+            	t.show();
+            	ScreenShotHelper.registerToast(t);
             }
 			else if (msg.what == UPDATE_GPS_VIEW_INFO)
 			{
@@ -1333,7 +1361,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 			}
 			else if (msg.what == START_EMULATOR_NAVIGATION) {
 				startEmulatorNavi();
-			}
+            } else if (msg.what == AUTOTEST_SCREENSHOT_MSG) {
+                ScreenShotHelper.captureImage(true);
+            }
         }
     };
     
@@ -1716,11 +1746,13 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	protected Dialog onCreateDialog(int id) {
 		switch (id) {
 		case EXIT_TBTNAVI:
-			return new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.quit).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
+		    AlertDialog d = new AlertDialog.Builder(this).setIcon(R.drawable.ic_launcher).setTitle(R.string.quit).setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
 				public void onClick(DialogInterface dialog, int whichButton) {
 					destroyTBTApplication();
 				}
 			}).setNegativeButton(R.string.cancel, null).create();
+			ScreenShotHelper.registerDialog(d);
+			return d;
 		default:
 			break;
 		}

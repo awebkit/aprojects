@@ -3,6 +3,8 @@ package com.autonavi.tbt.demo;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import com.example.autotest.BackgroundHandler;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ public class AutoNaviTBTDemoActivity extends Activity {
          
         };
     
-        timer.schedule(task, 2000);		
+        timer.schedule(task, 2000);
+        BackgroundHandler.init(this);
     }
 }

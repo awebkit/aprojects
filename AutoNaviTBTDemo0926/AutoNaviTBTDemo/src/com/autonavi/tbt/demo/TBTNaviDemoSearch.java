@@ -37,6 +37,7 @@ import com.amap.mapapi.core.PoiItem;
 import com.amap.mapapi.poisearch.PoiPagedResult;
 import com.amap.mapapi.poisearch.PoiSearch;
 import com.amap.mapapi.poisearch.PoiTypeDef;
+import com.example.autotest.ScreenShotHelper;
 
 import com.iflytek.speech.RecognizerResult;
 import com.iflytek.speech.SpeechConfig.RATE;
@@ -152,6 +153,7 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 		  });
 		
 		fillDestinationHistoryData();
+		ScreenShotHelper.setActivity(this);
 	}
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int DELETE_ALL_ID = Menu.FIRST + 2;
@@ -164,6 +166,8 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 		
 		menu.add(0, DELETE_ID, 0, R.string.menu_delete);
 		menu.add(1, DELETE_ALL_ID, 0, R.string.menu_delete_all);
+		
+		ScreenShotHelper.registerMenu(menu);
 		
 		super.onCreateContextMenu(menu, v, menuInfo);
 	}
@@ -252,8 +256,10 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 								
  
 				}else{                                                            
-					Toast.makeText(TBTNaviDemoSearch.this, "²éÑ¯ÄÚÈÝ²»ÄÜÎª¿Õ!",           
-							Toast.LENGTH_LONG).show();                                  
+					Toast t = Toast.makeText(TBTNaviDemoSearch.this, "²éÑ¯ÄÚÈÝ²»ÄÜÎª¿Õ!",           
+							Toast.LENGTH_LONG);
+					t.show();
+					ScreenShotHelper.registerToast(t);
 				} 
 //				finish();
 			}
@@ -308,6 +314,7 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 		//		mResultText.setText(null);
 				
 				iatDialog.show();
+				ScreenShotHelper.registerDialog(iatDialog);
 			}
 		}
 	};
@@ -321,7 +328,9 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 		progDialog.setCancelable(true);
 		progDialog.setMessage("ÕýÔÚËÑË÷:\n" + keyWord);
 		progDialog.show();
-
+		
+		ScreenShotHelper.registerDialog(progDialog);
+		
 		Timer timer = new Timer();
         TimerTask task = new TimerTask() {
          @Override
@@ -363,12 +372,17 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 				DrawList(1);
 			}else if (msg.what == 30002) {
 				progDialog.dismiss();
-				Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü,Çë¼ì²éÍøÂçÁ¬½Ó£¡",
-					Toast.LENGTH_LONG).show();
+				Toast t = Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü,Çë¼ì²éÍøÂçÁ¬½Ó£¡",
+					Toast.LENGTH_LONG);
+				t.show();
+				ScreenShotHelper.registerToast(t);
+				
 			}else if (msg.what == 30003) {
 				progDialog.dismiss();
-				Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü,Çë¼ì²éËÑË÷ÄÚÈÝ£¡",
-					Toast.LENGTH_LONG).show();
+				Toast t = Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü,Çë¼ì²éËÑË÷ÄÚÈÝ£¡",
+					Toast.LENGTH_LONG);
+				t.show();
+				ScreenShotHelper.registerToast(t);
 			}
 		}
     };
@@ -379,8 +393,10 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 			list = result.getPage(nPage);
 			if (list == null)
 			{
-				Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü£¬Çë¼ì²éËÑË÷ÄÚÈÝ£¡",     
-						Toast.LENGTH_LONG).show();
+				Toast t = Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü£¬Çë¼ì²éËÑË÷ÄÚÈÝ£¡",     
+						Toast.LENGTH_LONG);
+				t.show();
+				ScreenShotHelper.registerToast(t);
 				return;
 			}
 			
@@ -403,8 +419,10 @@ public class TBTNaviDemoSearch extends Activity implements RecognizerDialogListe
 		}
 		catch (AMapException e)
 		{
-			Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü£¬Çë¼ì²éËÑË÷ÄÚÈÝ£¡",     
-					Toast.LENGTH_LONG).show();    
+			Toast t = Toast.makeText(getApplicationContext(), "ËÑË÷Ê§°Ü£¬Çë¼ì²éËÑË÷ÄÚÈÝ£¡",     
+					Toast.LENGTH_LONG);
+			t.show();
+			ScreenShotHelper.registerToast(t);
 		}
 	}
     

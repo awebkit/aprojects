@@ -16,6 +16,7 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import com.autonavi.tbt.NaviGuideItem;
+import com.example.autotest.ScreenShotHelper;
 
 public class TBTNaviDemoRouteProfile extends Activity {
 
@@ -41,6 +42,7 @@ public class TBTNaviDemoRouteProfile extends Activity {
                 new String[]{"ivTurnInfo","tvCurrentStreetName","tvCurrentStreetLength"},
                 new int[]{R.id.ivTurnInfo,R.id.tvCurrentStreetName,R.id.tvCurrentStreetLength});
         lvRouteProfile.setAdapter(adapter);
+        ScreenShotHelper.setActivity(this);
 	}
 
 	private OnClickListener onClick = new OnClickListener() {

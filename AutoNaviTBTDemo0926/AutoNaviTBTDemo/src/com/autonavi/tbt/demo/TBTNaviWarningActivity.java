@@ -1,5 +1,7 @@
 package com.autonavi.tbt.demo;
 
+import com.example.autotest.ScreenShotHelper;
+
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.AlertDialog.Builder;
@@ -29,7 +31,8 @@ public class TBTNaviWarningActivity extends Activity {
 		
 		agreed = (Button)findViewById(R.id.warning_agreed);
 		agreed.setOnClickListener(onClick);
-	
+		
+		ScreenShotHelper.setActivity(this);
 	}
 	
 	private OnClickListener onClick=new OnClickListener() {
@@ -62,7 +65,7 @@ public class TBTNaviWarningActivity extends Activity {
 		{ 
 			Builder b = new AlertDialog.Builder(this).setTitle("没有可用的网络").setMessage("是否对网络进行设置？");            
 			
-			b.setPositiveButton("是", new DialogInterface.OnClickListener() {    		
+			AlertDialog d = b.setPositiveButton("是", new DialogInterface.OnClickListener() {    		
 				public void onClick(DialogInterface dialog, int whichButton) {
 					Intent mIntent = new Intent("/");                    
 					ComponentName comp = new ComponentName( 
@@ -77,7 +80,8 @@ public class TBTNaviWarningActivity extends Activity {
 				public void onClick(DialogInterface dialog, int whichButton) { 
 					dialog.cancel();                
 				}            
-			}).show();        
+			}).show();
+			ScreenShotHelper.registerDialog(d);
 		}        
 		
 		return netSataus;    
@@ -93,7 +97,7 @@ public class TBTNaviWarningActivity extends Activity {
         }
 		if (!gpsStatus) {
 			Builder b = new AlertDialog.Builder(this).setTitle("GPS服务未打开").setMessage("是否对GPS服务进行设置？");   
-			b.setPositiveButton("是", new DialogInterface.OnClickListener() {    		
+			AlertDialog d = b.setPositiveButton("是", new DialogInterface.OnClickListener() {    		
 				public void onClick(DialogInterface dialog, int whichButton) {
 					Intent intent = new Intent(Settings.ACTION_SECURITY_SETTINGS);
 			        startActivityForResult(intent,0);          
@@ -103,6 +107,7 @@ public class TBTNaviWarningActivity extends Activity {
 					dialog.cancel();                
 				}            
 			}).show();
+			ScreenShotHelper.registerDialog(d);
 		}
 		
 		return gpsStatus;
