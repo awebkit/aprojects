@@ -20,6 +20,7 @@ import android.view.View;
 public class Utils {
     
     public final static boolean LOGD_ENABLED = false;
+    public final static boolean CAPTURE_TEST = false;
 //    private static Bitmap mCapture;
 //    
 //    public static void initBitmap(int thumbnailWidth, int thumbnailHeight){
@@ -140,7 +141,7 @@ public class Utils {
             c.translate(0, -top);
             //c.scale(0.65f, 0.65f, left, top);
             try {
-                // draw webview may nullpoint
+                // draw webview may nullpoint               
                 view.draw(c);
             } catch (Exception e) {
             }
@@ -279,9 +280,8 @@ public class Utils {
         
         Paint paint2 = new Paint();
         paint2.setColor(Color.WHITE);
-        paint2.setAlpha((int) (255 * usealpha));
         
-        cv.drawBitmap(second, fromPoint.x, fromPoint.y, paint2);  
+        cv.drawBitmap(second, fromPoint.x, fromPoint.y, null);  
         cv.save(Canvas.ALL_SAVE_FLAG);  
         cv.restore();  
         return newBitmap;  

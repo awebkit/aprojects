@@ -25,6 +25,7 @@ import android.view.View;
 public class CaptureServer implements Runnable {
 
     private final static boolean LOGD_ENABLED = Utils.LOGD_ENABLED;
+    private final static boolean CAPTURE_TEST = Utils.CAPTURE_TEST;
     
     private static final String LOG_TAG = "tbt";
     private static int CAPTURE_PORT = 54321;
@@ -43,21 +44,6 @@ public class CaptureServer implements Runnable {
     
     CaptureServer(Activity activity) {
         mActivity = activity;
-        mCaptureClerk = null;
-    }
-
-    public static void setClerk(CaptureClerk clerk){
-        mCaptureClerk = clerk;
-    }
-    
-    public void setActivity(Activity activity){
-        setActivity(activity, false);
-    }
-    
-    public void setActivity(Activity activity, boolean useActivityMethod){
-        mActivity = activity;
-        mInsideUI = useActivityMethod;
-        if (LOGD_ENABLED) Log.d(LOG_TAG, "set activity " + mActivity.hashCode());
     }
 
     @Override
@@ -86,7 +72,10 @@ public class CaptureServer implements Runnable {
                                 streamOut.write(buffer);
                                 streamOut.flush();
                             }
-                            SystemClock.sleep(100);
+                            if (CAPTURE_TEST){
+                                SystemClock.sleep(1000);
+                            } else
+                                SystemClock.sleep(100);
                         }
                     } catch (IOException e) {
                         if (LOGD_ENABLED) Log.d(LOG_TAG, "capture thread exception, close");
@@ -141,21 +130,16 @@ public class CaptureServer implements Runnable {
         height = height - outRect.top;
         if (LOGD_ENABLED)
             Log.d(LOG_TAG, "prepareCaptureMessage activity height:" + height);
-        Bitmap bmp = null;
-        if (mInsideUI) {
-            ((TBTNaviDemoMapView) mActivity).createTestMessage();
-
-            bmp = mCaptureClerk.getCaptureProduct();
-        } else {
-            bmp = Utils.createScreenshot3(v, width, height, outRect.top);
-        }
+        Bitmap bmp = ScreenShotHelper.getCapture();
 
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 50, os);
         byte[] byteArray = os.toByteArray();
 
-//        pos++;
-//        Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
+        if (CAPTURE_TEST) {
+            pos++;
+            Utils.saveScreenshot(mActivity, "/sdcard/jieping" + pos + ".jpg", bmp, true);
+        }
 
         return new MessageBody(outRect.left, outRect.top, width, height, byteArray.length, byteArray).getBuf();
     }

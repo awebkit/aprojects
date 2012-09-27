@@ -37,6 +37,7 @@ import com.amap.mapapi.poisearch.PoiPagedResult;
 import com.amap.mapapi.poisearch.PoiSearch;
 import com.amap.mapapi.poisearch.PoiTypeDef;
 import com.example.autotest.BackgroundHandler;
+import com.example.autotest.ScreenShotHelper;
 
 public class TBTNaviDemoSearch extends Activity {
 
@@ -135,7 +136,7 @@ public class TBTNaviDemoSearch extends Activity {
 		
 		fillDestinationHistoryData();
 		Log.i(LOG_TAG, " ============TBTNaviDemoSearch === ");
-        BackgroundHandler.setActivity(this);
+		ScreenShotHelper.setActivity(this);
 	}
 	private static final int DELETE_ID = Menu.FIRST + 1;
 	private static final int DELETE_ALL_ID = Menu.FIRST + 2;

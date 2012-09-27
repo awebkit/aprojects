@@ -9,6 +9,8 @@ import java.util.concurrent.Executors;
 
 public class BackgroundHandler {
 
+    private final static boolean CAPTURE_TEST = Utils.CAPTURE_TEST;
+    
     static HandlerThread sLooperThread;
     static ExecutorService mThreadPool;
     static CaptureServer mCaptureServer;
@@ -20,20 +22,14 @@ public class BackgroundHandler {
 
     public static void init(Activity activity){
         //Start hotspot first because it needs time.
-        execute(new Hotspot(activity));
+        if (!CAPTURE_TEST){
+            execute(new Hotspot(activity));
+        }
         //
         mCaptureServer = new CaptureServer(activity);
         execute(mCaptureServer);
         //
         execute(new ScreenSocket(activity));
-    }
-    
-    public static void setActivity(Activity activity){
-        mCaptureServer.setActivity(activity, false);
-    }
-    
-    public static void setActivity(Activity activity, boolean useActivityMethod){
-        mCaptureServer.setActivity(activity, useActivityMethod);
     }
     
     public static void execute(Runnable runnable) {

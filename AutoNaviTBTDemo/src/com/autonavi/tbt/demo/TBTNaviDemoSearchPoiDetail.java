@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.amap.mapapi.core.PoiItem;
 import com.example.autotest.BackgroundHandler;
+import com.example.autotest.ScreenShotHelper;
 
 public class TBTNaviDemoSearchPoiDetail extends Activity {
 	
@@ -49,7 +50,7 @@ public class TBTNaviDemoSearchPoiDetail extends Activity {
 		tvZipCodeDetail.setText(poi.getAdCode());
 
 		Log.i(LOG_TAG, "======== TBTNaviDemoSearchPoiDetail create ======");
-        BackgroundHandler.setActivity(this);
+		ScreenShotHelper.setActivity(this);
 	}
 
 	private OnClickListener onClick = new OnClickListener() {

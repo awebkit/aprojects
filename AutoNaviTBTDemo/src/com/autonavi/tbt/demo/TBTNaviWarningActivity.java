@@ -2,6 +2,7 @@ package com.autonavi.tbt.demo;
 
 import com.example.autotest.BackgroundHandler;
 import com.example.autotest.CaptureServer;
+import com.example.autotest.ScreenShotHelper;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -33,7 +34,7 @@ public class TBTNaviWarningActivity extends Activity {
 		agreed = (Button)findViewById(R.id.warning_agreed);
 		agreed.setOnClickListener(onClick);
 	
-		BackgroundHandler.setActivity(this);
+		ScreenShotHelper.setActivity(this);
 	}
 	
 	private OnClickListener onClick=new OnClickListener() {

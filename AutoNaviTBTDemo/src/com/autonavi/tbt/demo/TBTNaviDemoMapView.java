@@ -84,6 +84,7 @@ import com.example.autotest.BackgroundHandler;
 import com.example.autotest.CaptureClerk;
 import com.example.autotest.CaptureServer;
 import com.example.autotest.InvokeMenuBuilder;
+import com.example.autotest.ScreenShotHelper;
 import com.example.autotest.Utils;
 import com.iflytek.tts.TtsService.Tts;
 
@@ -111,7 +112,7 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	private static final int START_GPS_NAVIGATION = 0x000000012;
 	private static final int START_EMULATOR_NAVIGATION = 0x000000013;
 	private static final int UPDATE_GPS_VIEW_INFO_2 = 0x00000014;
-	private static final int TBT_AUTOTEST_MSG = 0x00000020;
+	private static final int AUTOTEST_SCREENSHOT_MSG = 0x00000020;
 	
 	private SlidingDrawer mDrawer;
 	private Boolean flag=false;
@@ -244,7 +245,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
-					DialogArray.append(d.hashCode(), d);
+//					DialogArray.append(d.hashCode(), d);
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 		});
@@ -256,7 +258,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				if (mCrossExists) {
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
-					DialogArray.append(d.hashCode(), d);
+//					DialogArray.append(d.hashCode(), d);
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 		});
@@ -311,7 +314,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 			public void onClick(View v) {
 				Toast t = Toast.makeText(getApplicationContext(), "点击地图选择目的地", Toast.LENGTH_LONG);
 				t.show();
-				mToast = t;
+//				mToast = t;
+				ScreenShotHelper.registerToast(t);
 				mMapView.getOverlays().add(overlay);
 			}
 		});
@@ -416,11 +420,10 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		SetGPSInfor GPSInfor = new SetGPSInfor(this, mTbt);
 		//GPSInfor.start();
 		
-        BackgroundHandler.setActivity(this, true);
-		mCaptureClerk = new CaptureClerk();
-		CaptureServer.setClerk(mCaptureClerk);
-		
-		DialogArray = new SparseArray();
+
+		ScreenShotHelper.setActivity(this);
+		ScreenShotHelper.captureInsideActivity(this);
+
 	}
 	private TTSHandler mTTSHandler= null;
 	
@@ -442,7 +445,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 	public boolean onCreateOptionsMenu(Menu menu) {
 		super.onCreateOptionsMenu(menu);
 		getMenuInflater().inflate(R.menu.menu, menu);
-		mMenu = menu;
+//		mMenu = menu;
+		ScreenShotHelper.registerMenu(menu);
 		return true;
 	}
 	
@@ -554,7 +558,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					}
 				}).create();
 				mAlertDialog.show();
-				DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
+//				DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
+				ScreenShotHelper.registerDialog(mAlertDialog);
 			}
 			
 			naviOverlay = new NaviLineOverlay();
@@ -577,7 +582,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		if (routeResult != 1) {
 			mAlertDialog = new AlertDialog.Builder(this).setTitle(str).setPositiveButton(R.string.ok, null).create();
 			mAlertDialog.show();
-			DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
+//			DialogArray.append(mAlertDialog.hashCode(), mAlertDialog);
+			ScreenShotHelper.registerDialog(mAlertDialog);
 		}
 	}
 	
@@ -901,7 +907,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				    Log.i(LOG_TAG, "mTrafficPanelExists ===========");
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mTrafficPanelBitmap);
 					d.show();
-					DialogArray.append(d.hashCode(), d);
+//					DialogArray.append(d.hashCode(), d);
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 			
@@ -926,7 +933,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 				    Log.i(LOG_TAG, "mCrossExists ===========");
 					Dialog d = new TBTNaviDemoTrafficPanelDialog(TBTNaviDemoMapView.this, mCrossBitmap);
 					d.show();
-					DialogArray.append(d.hashCode(), d);
+//					DialogArray.append(d.hashCode(), d);
+					ScreenShotHelper.registerDialog(d);
 				}
 			}
 		}
@@ -937,7 +945,6 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
     @Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-    	BackgroundHandler.setActivity(this, true);
     	if (requestCode == ACTIVITY_SEARCH) {
             if (resultCode == RESULT_OK) {
                 // 增加检索结果算路代码
@@ -963,11 +970,11 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
     	
     }
     
-    public void  createTestMessage(){
+    public void  createScreenShotMessage(){
         
         Message message = new Message();
         
-        message.what = TBT_AUTOTEST_MSG;
+        message.what = AUTOTEST_SCREENSHOT_MSG;
         
         mHandler.sendMessage(message);
         
@@ -1069,7 +1076,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 		})*/.create();
 
 		alertDialog.show();
-		DialogArray.append(alertDialog.hashCode(), alertDialog);
+//		DialogArray.append(alertDialog.hashCode(), alertDialog);
+		ScreenShotHelper.registerDialog(alertDialog);
 	}
     
 	public void setCCP(double longitude, double latitude) {		
@@ -1127,76 +1135,78 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
             	createPathChoiceDialog();
 			   
             }
-            else if(msg.what == TBT_AUTOTEST_MSG){
-                if (LOGD_ENABLED) Log.d(LOG_TAG, "******** begin capture0  ----------->");
-                View v = getWindow().getDecorView();
-                Rect vRect = new Rect();
-                v.getWindowVisibleDisplayFrame(vRect);
-                mCapture = Utils.createPngScreenshot(v, v.getWidth(), v.getHeight() - vRect.top, vRect.top);
-                for (int i = 0; i < DialogArray.size(); ++i){
-                    Dialog d = DialogArray.valueAt(i);
-                    if (d != null && d.isShowing()){
-                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= dialog " + d.hashCode());
-                        Window w = d.getWindow();
-                        
-                        View dialogView = w.getDecorView();
-                        Rect outRect = new Rect();
-                        dialogView.getWindowVisibleDisplayFrame(outRect);
-                        
-                        WindowManager.LayoutParams lp = w.getAttributes();
-                        PointF fromPoint = null;
-                        int g = lp.gravity;
-                        if (g == 48) {//
-                            float x = lp.x;
-                            float y = lp.y;
-                            fromPoint = new PointF(x, y);                            
-                        } else if (g == 17){
-                            DisplayMetrics outMetrics = new DisplayMetrics();
-                            getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
-                            float x = (outMetrics.widthPixels - dialogView.getWidth())/ 2 + lp.x;
-                            float y = (outMetrics.heightPixels - dialogView.getHeight() )/ 2 + lp.y;
-                            fromPoint = new PointF(x, y);
-                        }
-                        
-                        int width = dialogView.getWidth();
-                        int height = dialogView.getHeight();
-                       
-                        height = height - outRect.top;
-                        if (width > 0 && height > 0){
-                            Bitmap second = Utils.createPngScreenshot(dialogView, width, height, 0);
-                            mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint, lp.dimAmount);
-                        }
-                        break; //only one dialog
-                    }
-
-                }
+            else if(msg.what == AUTOTEST_SCREENSHOT_MSG){
+                ScreenShotHelper.captureImage(true);
                 
-                //for options menu
-                if (mMenu != null){
-                    View mv = InvokeMenuBuilder.getMenuView(mMenu, 0, (ViewGroup)v);
-                    if (mv.getWidth() > 0 && mv.isShown()){
-                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + mv.getHeight());
-                        Bitmap second = Utils.createPngScreenshot2(mv, mv.getWidth(), mv.getHeight(), 0);
-                        PointF fromPoint = new PointF(0, v.getHeight() - vRect.top - mv.getHeight());
-                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
-                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 0.9);
-                    }
-                }
-
-                //for toast
-                if (mToast != null){
-                    View tv = mToast.getView();
-                    if (tv.getWidth() > 0 && tv.isShown()){
-                        if (LOGD_ENABLED) Log.i(LOG_TAG, "==== " + tv.getWidth() + " " + tv.getHeight());
-                        Bitmap second = Utils.createPngScreenshot(tv, tv.getWidth(), tv.getHeight(), 0);
-                        if (LOGD_ENABLED) Log.d(LOG_TAG, "====== gravity " + mToast.getGravity() + " x y " + mToast.getXOffset() + " " 
-                                + mToast.getYOffset() + " " + mToast.getHorizontalMargin() + " " + mToast.getVerticalMargin());
-                        PointF fromPoint = new PointF((v.getWidth() - tv.getWidth()) / 2, v.getHeight() - vRect.top - mToast.getYOffset() - tv.getHeight());
-                        if (LOGD_ENABLED) Log.i(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
-                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 1.0);
-                    }        
-                }
-                mCaptureClerk.setCaptureProduct(mCapture);
+//                if (LOGD_ENABLED) Log.d(LOG_TAG, "******** begin capture0  ----------->");
+//                View v = getWindow().getDecorView();
+//                Rect vRect = new Rect();
+//                v.getWindowVisibleDisplayFrame(vRect);
+//                mCapture = Utils.createPngScreenshot(v, v.getWidth(), v.getHeight() - vRect.top, vRect.top);
+//                for (int i = 0; i < DialogArray.size(); ++i){
+//                    Dialog d = DialogArray.valueAt(i);
+//                    if (d != null && d.isShowing()){
+//                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= dialog " + d.hashCode());
+//                        Window w = d.getWindow();
+//                        
+//                        View dialogView = w.getDecorView();
+//                        Rect outRect = new Rect();
+//                        dialogView.getWindowVisibleDisplayFrame(outRect);
+//                        
+//                        WindowManager.LayoutParams lp = w.getAttributes();
+//                        PointF fromPoint = null;
+//                        int g = lp.gravity;
+//                        if (g == 48) {//
+//                            float x = lp.x;
+//                            float y = lp.y;
+//                            fromPoint = new PointF(x, y);                            
+//                        } else if (g == 17){
+//                            DisplayMetrics outMetrics = new DisplayMetrics();
+//                            getWindowManager().getDefaultDisplay().getMetrics(outMetrics);
+//                            float x = (outMetrics.widthPixels - dialogView.getWidth())/ 2 + lp.x;
+//                            float y = (outMetrics.heightPixels - dialogView.getHeight() )/ 2 + lp.y;
+//                            fromPoint = new PointF(x, y);
+//                        }
+//                        
+//                        int width = dialogView.getWidth();
+//                        int height = dialogView.getHeight();
+//                       
+//                        height = height - outRect.top;
+//                        if (width > 0 && height > 0){
+//                            Bitmap second = Utils.createPngScreenshot(dialogView, width, height, 0);
+//                            mCapture = Utils.mixtureBitmap(mCapture, second, fromPoint, lp.dimAmount);
+//                        }
+//                        break; //only one dialog
+//                    }
+//
+//                }
+//                
+//                //for options menu
+//                if (mMenu != null){
+//                    View mv = InvokeMenuBuilder.getMenuView(mMenu, 0, (ViewGroup)v);
+//                    if (mv.getWidth() > 0 && mv.isShown()){
+//                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + mv.getHeight());
+//                        Bitmap second = Utils.createPngScreenshot2(mv, mv.getWidth(), mv.getHeight(), 0);
+//                        PointF fromPoint = new PointF(0, v.getHeight() - vRect.top - mv.getHeight());
+//                        if (LOGD_ENABLED) Log.d(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
+//                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 0.9);
+//                    }
+//                }
+//
+//                //for toast
+//                if (mToast != null){
+//                    View tv = mToast.getView();
+//                    if (tv.getWidth() > 0 && tv.isShown()){
+//                        if (LOGD_ENABLED) Log.i(LOG_TAG, "==== " + tv.getWidth() + " " + tv.getHeight());
+//                        Bitmap second = Utils.createPngScreenshot(tv, tv.getWidth(), tv.getHeight(), 0);
+//                        if (LOGD_ENABLED) Log.d(LOG_TAG, "====== gravity " + mToast.getGravity() + " x y " + mToast.getXOffset() + " " 
+//                                + mToast.getYOffset() + " " + mToast.getHorizontalMargin() + " " + mToast.getVerticalMargin());
+//                        PointF fromPoint = new PointF((v.getWidth() - tv.getWidth()) / 2, v.getHeight() - vRect.top - mToast.getYOffset() - tv.getHeight());
+//                        if (LOGD_ENABLED) Log.i(LOG_TAG, "======= prepare menu view2  ========" + fromPoint.x + " " + fromPoint.y);
+//                        mCapture = Utils.mixtureBitmap2(mCapture, second, fromPoint, 0, (float) 1.0);
+//                    }        
+//                }
+//                mCaptureClerk.setCaptureProduct(mCapture);
                 
                 Log.d(LOG_TAG, "******** end  capture  ----------->");
             }            
@@ -1309,7 +1319,9 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
             	mpDialog.setMessage("路径请求中...");
             	mpDialog.setCancelable(true);
             	mpDialog.show();
-            	DialogArray.append(mpDialog.hashCode(), mpDialog);
+//            	DialogArray.append(mpDialog.hashCode(), mpDialog);
+            	ScreenShotHelper.registerDialog(mpDialog);
+            	
             }
             else if (msg.what == SHOW_ROUTE_FOR_TMC_HINT) {
             	Toast.makeText(getApplicationContext(), "前方路况变化，重新计算路线中。。。",
@@ -1777,7 +1789,8 @@ public class TBTNaviDemoMapView extends MapActivity implements LocationListener,
 					destroyTBTApplication();
 				}
 			}).setNegativeButton(R.string.cancel, null).create();
-			DialogArray.append(d.hashCode(), d);
+//			DialogArray.append(d.hashCode(), d);
+			ScreenShotHelper.registerDialog(d);
 			return d;
 		default:
 			break;
